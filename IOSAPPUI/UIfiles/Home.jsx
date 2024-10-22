@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import LoadingScreen from './Loading'; // Import the LoadingScreen component
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'; // Import SplashScreen from expo-splash-screen
 
@@ -15,6 +16,7 @@ const loadFonts = async () => {
 
 const HomeScreen = ({ navigation }) => {
     const [fontsLoaded, setFontsLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Control when to show the loading screen
 
     // Load the font before rendering
     useEffect(() => {
@@ -29,6 +31,21 @@ const HomeScreen = ({ navigation }) => {
 
     if (!fontsLoaded) {
         return null; // Prevent rendering until fonts are loaded
+    }
+
+    const handlePlayPress = () => {
+        // Show the loading screen
+        setIsLoading(true);
+
+        // Delay for a few seconds (e.g., 3 seco    nds) then navigate to CafeScreen
+        setTimeout(() => {
+            setIsLoading(false); // Hide the loading screen
+            navigation.navigate('Cafe'); // Navigate to CafeScreen after loading
+        }, 3000); // 3000 ms = 3 seconds delay
+    };
+
+    if (isLoading) {
+        return <LoadingScreen />; // Show the loading screen during the delay
     }
 
     return (
@@ -57,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
             <TouchableOpacity
                 style={[styles.playButton, styles.shadow]}
                 activeOpacity={0.7}  // Adjust the opacity level when pressed
-                onPress={() => navigation.navigate('Cafe')}
+                onPress={handlePlayPress}
             >
                 <Text style={styles.playButtonText}>PLAY</Text>
             </TouchableOpacity>
