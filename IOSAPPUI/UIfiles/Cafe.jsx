@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, StyleSheet, ImageBackground, Dimensions, Image, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Animated, Easing, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Animated, Easing, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -39,37 +39,38 @@ const CafeScreen = ({ navigation }) => {
             {/* Dismiss keyboard when tapping outside */}
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
-                    <ImageBackground
+                    {/* Background Image as a regular Image component */}
+                    <Image
                         source={require('../assets/images/cafeInterior.png')} // Path to your background image
-                        style={styles.background} // Apply styles for full-screen background
-                    >
-                        {/* Character Image */}
-                        <View style={styles.characterContainer}>
-                            <Image
-                                source={require('../assets/images/Persephone.png')}  // Character image path
-                                style={styles.characterImage}  // Custom style for image positioning
-                            />
-                        </View>
+                        style={styles.backgroundImage} // Apply styles to cover the entire screen
+                    />
 
-                        {/* Button in the top-left corner to open modal */}
-                        <TouchableOpacity style={styles.topLeftButton} activeOpacity={0.7} onPress={showModal}>
-                            <Text style={styles.topLeftButtonText}>Menu</Text>
-                        </TouchableOpacity>
-
-                        {/* Semi-Transparent Black Box */}
-                        <View style={styles.bottomBox}>
-                            <Text style={styles.boxText}>Hey. What type of Coffee do you like?</Text>
-                        </View>
-
-                        {/* Input Text Area */}
-                        <TextInput
-                            style={styles.input} // Style for the input field
-                            placeholder="Answer Her" // Placeholder text
-                            placeholderTextColor="#fff" // Placeholder text color
-                            value={text} // Bind the input value to state
-                            onChangeText={setText} // Update the text when the user types
+                    {/* Character Image */}
+                    <View style={styles.characterContainer}>
+                        <Image
+                            source={require('../assets/images/Persephone.png')}  // Character image path
+                            style={styles.characterImage}  // Custom style for image positioning
                         />
-                    </ImageBackground>
+                    </View>
+
+                    {/* Button in the top-left corner to open modal */}
+                    <TouchableOpacity style={styles.topLeftButton} activeOpacity={0.7} onPress={showModal}>
+                        <Text style={styles.topLeftButtonText}>Menu</Text>
+                    </TouchableOpacity>
+
+                    {/* Semi-Transparent Black Box */}
+                    <View style={styles.bottomBox}>
+                        <Text style={styles.boxText}>Hey. What type of Coffee do you like?</Text>
+                    </View>
+
+                    {/* Input Text Area */}
+                    <TextInput
+                        style={styles.input} // Style for the input field
+                        placeholder="Answer Her" // Placeholder text
+                        placeholderTextColor="#fff" // Placeholder text color
+                        value={text} // Bind the input value to state
+                        onChangeText={setText} // Update the text when the user types
+                    />
                 </View>
             </TouchableWithoutFeedback>
 
@@ -96,11 +97,14 @@ const CafeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1, // Make the image cover the entire screen
-        justifyContent: 'center', // Center content vertically
-        alignItems: 'center', // Center content horizontally
-        zIndex: 0, // Ensure background is the lowest layer
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover', // Cover the entire screen with the background image
+        zIndex: 0, // Ensure the image is in the background
     },
     topLeftButton: {
         position: 'absolute',
@@ -150,11 +154,11 @@ const styles = StyleSheet.create({
         color: '#fff',
         position: 'absolute',
         bottom: height * 0.12, // Place it slightly above the bottom of the screen
-        width: '90%', // Make it nearly full-width with some margin
-        height: 40, // Height of the input box
+        width: '100%', // Full width of the screen
+        height: 50, // Adjust the height as needed
         backgroundColor: '#000', // Black background for the input
-        borderRadius: 5, // Rounded corners
-        paddingHorizontal: 10, // Padding inside the input box
+        borderRadius: 0, // More rounded corners for the input box
+        paddingHorizontal: 20, // Padding inside the input box
         fontSize: 16, // Font size for input text
         opacity: 0.8,
         zIndex: 1, // Ensure it's above the background but below the button and modal
