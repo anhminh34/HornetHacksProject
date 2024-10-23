@@ -7,6 +7,7 @@ const CafeScreen = ({ navigation }) => {
     const [text, setText] = useState(''); // State to hold the input text
     const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
     const slideAnim = useRef(new Animated.Value(height)).current; // Create animated value for sliding (starts off-screen)
+    const [responseMessage, setResponseMessage] = useState(''); // Sets the response from the backend
 
     // Function to show the modal with sliding animation
     const showModal = () => {
@@ -29,6 +30,31 @@ const CafeScreen = ({ navigation }) => {
             useNativeDriver: true,
         }).start(() => setModalVisible(false)); // Hide modal after the animation completes
     };
+
+
+
+
+    //function to handle form submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        //send the input to the backend
+        fetch('http://127.0.0.1:5000/process-input', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setResponseMessage(data.result);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    };
+
+
 
     return (
         <KeyboardAvoidingView
@@ -58,7 +84,7 @@ const CafeScreen = ({ navigation }) => {
                         <Text style={styles.topLeftButtonText}>Menu</Text>
                     </TouchableOpacity>
 
-                    {/* Semi-Transparent Black Box */}
+                    {/* Semi-Transparent Black Box || CHANGE TEXT WITH AI RESPONSE*/}
                     <View style={styles.bottomBox}>
                         <Text style={styles.boxText}>Hey. What type of Coffee do you like?</Text>
                     </View>
