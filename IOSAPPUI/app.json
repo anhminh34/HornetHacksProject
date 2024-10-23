@@ -12,7 +12,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to allow you to select images for customization."
+      }
     },
     "android": {
       "adaptiveIcon": {
