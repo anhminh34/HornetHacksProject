@@ -84,8 +84,10 @@ const SettingsScreen = ({ navigation }) => {
 
             {/* Settings UI */}
             <View style={styles.settingsContainer}>
-                <Text style={styles.profileName}>Username</Text>
-                <Text style={styles.rank}>Clueless</Text>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.profileName}>Username</Text>
+                    <Text style={styles.rank}>Clueless</Text>
+                </View>
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>App Settings</Text>
@@ -94,13 +96,6 @@ const SettingsScreen = ({ navigation }) => {
                         <Switch
                             onValueChange={toggleNotifications}
                             value={notificationsEnabled}
-                        />
-                    </View>
-                    <View style={styles.settingItem}>
-                        <Text style={styles.settingText}>Dark Mode</Text>
-                        <Switch
-                            onValueChange={toggleDarkMode}
-                            value={darkModeEnabled}
                         />
                     </View>
                 </View>
@@ -186,6 +181,9 @@ const styles = StyleSheet.create({
         color: '#fff',
         marginTop: 10,
     },
+    nameContainer: {
+      marginBottom: height * 0.025,
+    },
     rank: {
         fontSize: height * 0.02,  // Responsive font for the tag
         color: '#fff',
@@ -216,7 +214,7 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.02,  // Dynamic padding for logout button
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: height * 0.02,
+        marginTop: height * 0.05,
     },
     logoutText: {
         color: '#FFF',
