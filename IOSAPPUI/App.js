@@ -5,7 +5,6 @@ import Home from './UIfiles/Home';  // Import the Home screen component
 import Cafe from './UIfiles/Cafe';  // Import the Cafe screen component
 import Settings from './UIfiles/Settings';
 import { ImageProvider } from './UIfiles/ImageContext';
-import {Image} from "react-native";
 
 const Stack = createNativeStackNavigator();
 
