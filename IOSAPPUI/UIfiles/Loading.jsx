@@ -52,7 +52,7 @@ const LoadingScreen = () => {
                     { opacity: fadeAnim }, // Apply fade-in effect to the text
                 ]}
             >
-                Love with all your might
+                Love With All Your Might
             </Animated.Text>
         </View>
     );

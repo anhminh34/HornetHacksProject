@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         backgroundColor: '#23171E',
-        paddingBottom: 20,  // Fixed padding for the bottom
+        paddingBottom: 30,  // Fixed padding for the bottom
         paddingTop: 10,  // Fixed top padding
         borderTopWidth: 1,  // Add a thin border on top
         borderTopColor: '#FFF',  // Set the border color to white
