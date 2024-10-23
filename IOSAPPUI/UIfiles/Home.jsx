@@ -90,7 +90,9 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.navButton}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={styles.navButton}
+                    onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
             </View>
@@ -179,6 +181,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: '#23171E',
         paddingBottom: 30,
+        paddingTop: 10,
+        borderTopWidth: 1,  // Add a thin border on top
+        borderTopColor: '#FFF',  // Set the border color to white
     },
     navButton: {
         padding: 10,
