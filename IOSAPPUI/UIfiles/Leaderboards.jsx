@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
@@ -13,6 +13,12 @@ const LeaderboardScreen = ({ navigation }) => {
         { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/images/Mathew.jpg') },
         { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/icons/userIcon.png') },
         { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/edison.png') },
+        { rank: 6, name: 'RandomUser1', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 7, name: 'RandomUser2', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 8, name: 'RandomUser3', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 9, name: 'RandomUser4', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
+
+
     ];
 
     const getBackgroundColor = (rank) => {
@@ -41,7 +47,6 @@ const LeaderboardScreen = ({ navigation }) => {
                 colors={['#ff758c', '#ff7eb3']}
                 style={styles.topThreeContainer}
             >
-                <Text style={styles.title} allowFontScaling={false}>LEADERBOARD</Text>
                 <View style={styles.topThreeRow}>
                     {/* Second place on the left */}
                     <View style={styles.secondPlaceItem}>
@@ -78,7 +83,11 @@ const LeaderboardScreen = ({ navigation }) => {
             <View style={styles.spacing} />
 
             {/* Main Leaderboard List */}
-            <View style={styles.leaderboardList}>
+            <ScrollView
+                style={styles.scrollableLeaderboardList}
+                contentContainerStyle={[styles.scrollContent, { paddingBottom: height * 0.10 }]}  // Added more bottom padding
+                showsVerticalScrollIndicator={false}  // Optional: hides scroll bar
+            >
                 {leaderboardData.map((player, index) => (
                     <View
                         key={index}
@@ -94,7 +103,8 @@ const LeaderboardScreen = ({ navigation }) => {
                         </View>
                     </View>
                 ))}
-            </View>
+            </ScrollView>
+
 
             {/* Modal for Overlay */}
             <Modal
@@ -145,14 +155,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#23171E',
         alignItems: 'center',
-    },
-    title: {
-        fontSize: height * 0.03,
-        fontWeight: 'bold',
-        color: '#FFF',
-        textAlign: 'center',
-        zIndex: 1,
-        marginTop: height * 0.04,
     },
     topThreeContainer: {
         width: '100%',
@@ -236,18 +238,23 @@ const styles = StyleSheet.create({
     spacing: {
         height: height * 0.05,
     },
-    leaderboardList: {
+    scrollableLeaderboardList: {
+        flex: 1,
         width: '100%',
+    },
+    scrollContent: {
+        alignItems: 'center',
+        paddingBottom: height * 0.05,  // Optional padding for the bottom of the scroll area
     },
     leaderboardItem: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: height * 0.07,
-        marginBottom: height * 0.02,
-        padding: height * 0.01,
+        height: height * 0.07,         // Dynamically set height
+        marginBottom: height * 0.02,   // Dynamically set margin
+        padding: height * 0.01,        // Dynamically set padding
         borderRadius: 10,
-        width: width * 0.9,
+        width: width * 0.9,            // Dynamically set width
         alignSelf: 'center',
     },
     rankAndIconContainer: {
@@ -255,7 +262,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     userIconMainList: {
-        width: width * 0.09,
+        width: width * 0.09,           // Dynamically set image size
         height: width * 0.09,
         borderRadius: width * 0.06,
         resizeMode: 'cover',
@@ -266,12 +273,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     playerNameSmall: {
-        fontSize: height * 0.015,
+        fontSize: height * 0.015,       // Dynamically set font size
         fontWeight: 'bold',
         marginLeft: width * 0.02,
     },
     playerScoreSmall: {
-        fontSize: height * 0.015,
+        fontSize: height * 0.015,       // Dynamically set font size
         fontWeight: 'bold',
         color: '#7C1150',
         marginLeft: width * 0.03,
@@ -349,3 +356,4 @@ const styles = StyleSheet.create({
 });
 
 export default LeaderboardScreen;
+
