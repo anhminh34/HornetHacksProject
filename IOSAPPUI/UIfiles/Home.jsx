@@ -1,68 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Modal } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Modal, Animated } from 'react-native';
 import LoadingScreen from './Loading'; // Import the LoadingScreen component
 import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen'; // Import SplashScreen from expo-splash-screen
+import * as SplashScreen from 'expo-splash-screen';
 
-// Get screen dimensions for responsive design
 const { width, height } = Dimensions.get('window');
 
-// Function to load custom fonts
 const loadFonts = async () => {
     await Font.loadAsync({
-        'Jomhuria-Regular': require('../assets/fonts/Jomhuria-Regular.ttf'), // Path to your font file
+        'Jomhuria-Regular': require('../assets/fonts/Jomhuria-Regular.ttf'),
     });
 };
 
 const HomeScreen = ({ navigation }) => {
     const [fontsLoaded, setFontsLoaded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Control when to show the loading screen
-    const [modalVisible, setModalVisible] = useState(false); // Control the modal visibility
+    const [isLoading, setIsLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const scaleAnim = useRef(new Animated.Value(0)).current; // Create animated value for scaling
 
-    // Load the font before rendering
     useEffect(() => {
         const loadResources = async () => {
             await loadFonts();
             setFontsLoaded(true);
-            await SplashScreen.hideAsync(); // Hide the splash screen
+            await SplashScreen.hideAsync();
         };
 
         loadResources();
     }, []);
 
     if (!fontsLoaded) {
-        return null; // Prevent rendering until fonts are loaded
+        return null;
     }
 
     const handlePlayPress = () => {
-        // Show the loading screen
         setIsLoading(true);
 
-        // Delay for a few seconds (e.g., 3 seconds) then navigate to CafeScreen
         setTimeout(() => {
-            setIsLoading(false); // Hide the loading screen
-            navigation.navigate('Cafe'); // Navigate to CafeScreen after loading
-        }, 3000); // 3000 ms = 3 seconds delay
+            setIsLoading(false);
+            navigation.navigate('Cafe');
+        }, 3000);
+    };
+
+    const showModal = () => {
+        setModalVisible(true);
+        Animated.timing(scaleAnim, {
+            toValue: 1, // Scale to full size
+            duration: 150, // Animation duration in milliseconds
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const hideModal = () => {
+        Animated.timing(scaleAnim, {
+            toValue: 0, // Scale back to hidden
+            duration: 150,
+            useNativeDriver: true,
+        }).start(() => setModalVisible(false));
     };
 
     if (isLoading) {
-        return <LoadingScreen />; // Show the loading screen during the delay
+        return <LoadingScreen />;
     }
+
+    const currentRoute = navigation.getState().routes[navigation.getState().index].name;
 
     return (
         <View style={styles.container}>
             {/* City with Shadow */}
             <View style={styles.cityContainer}>
                 <Image
-                    source={require('../assets/images/city1.png')}  // Background image path
-                    style={styles.backgroundImage}  // Custom style for image positioning
+                    source={require('../assets/images/city1.png')}
+                    style={styles.backgroundImage}
                 />
             </View>
+
             {/* Cafe with Shadow */}
             <View style={styles.cafeContainer}>
                 <Image
-                    source={require('../assets/images/cafe.png')}  // Background image path
-                    style={styles.backgroundImage}  // Custom style for image positioning
+                    source={require('../assets/images/cafe.png')}
+                    style={styles.backgroundImage}
                 />
             </View>
 
@@ -71,8 +87,8 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.title} allowFontScaling={false}>COFFEE SHOP</Text>
             </View>
 
-            {/* Map Button moved below the title */}
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.mapButton}>
+            {/* Map Button */}
+            <TouchableOpacity onPress={showModal} style={styles.mapButton}>
                 <View style={styles.mapButtonCircle}>
                     <Image source={require('../assets/icons/mapIcon.png')} style={styles.mapIcon} />
                 </View>
@@ -81,7 +97,7 @@ const HomeScreen = ({ navigation }) => {
             {/* Play Button */}
             <TouchableOpacity
                 style={[styles.playButton, styles.shadow]}
-                activeOpacity={0.7}  // Adjust the opacity level when pressed
+                activeOpacity={0.7}
                 onPress={handlePlayPress}
             >
                 <Text style={styles.playButtonText} allowFontScaling={false}>PLAY</Text>
@@ -89,19 +105,23 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Bottom Navigation */}
             <View style={styles.navigationBar}>
-                <TouchableOpacity style={[styles.navButton, styles.activeNavButton]}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Home' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={styles.navButton}
+                    style={[styles.navButton, currentRoute === 'Leaderboard' ? styles.activeNavButton : null]}
                     onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Heart' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Heart')}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={styles.navButton}
+                    style={[styles.navButton, currentRoute === 'Settings' ? styles.activeNavButton : null]}
                     onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
@@ -109,14 +129,14 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Modal for the list of places */}
             <Modal
-                animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}  // Close modal on back button press (Android)
+                animationType="none"
+                onRequestClose={hideModal}
             >
                 <View style={styles.overlayContainer}>
-                    <View style={styles.overlayContent}>
-                        {/* Scrollable list of places with clickable buttons */}
+                    <Animated.View style={[styles.overlayContent, { transform: [{ scale: scaleAnim }] }]}>
+                        {/* Scrollable list of places */}
                         <ScrollView contentContainerStyle={styles.scrollContainer}>
                             <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 1 clicked')}>
                                 <Text style={styles.placeText} allowFontScaling={false}>Coffee Shop</Text>
@@ -138,11 +158,11 @@ const HomeScreen = ({ navigation }) => {
                             </TouchableOpacity>
                         </ScrollView>
 
-                        {/* X Button to close the modal */}
-                        <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                        {/* Close Button */}
+                        <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
                             <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 </View>
             </Modal>
         </View>
@@ -199,23 +219,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        fontSize: height * 0.06,  // Font size relative to screen height
+        fontSize: height * 0.06,
         color: '#FFE5C2',
         fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: height * 0.06,  // Set lineHeight to match font size
+        lineHeight: height * 0.06,
         marginVertical: 0,
     },
     mapButton: {
         position: 'absolute',
-        top: height * 0.22,  // Moved below the title
+        top: height * 0.22,
         left: width * 0.035,
         zIndex: 10,
     },
     mapButtonCircle: {
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',  // White background with 60% opacity
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
         borderRadius: 50,
-        padding: 10,  // Adjust padding for size
+        padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -235,10 +255,10 @@ const styles = StyleSheet.create({
     },
     playButtonText: {
         color: '#fff',
-        fontSize: height * 0.06,  // Set font size relative to screen height
+        fontSize: height * 0.06,
         fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: height * 0.07,   // Set lineHeight equal to fontSize for centering
+        lineHeight: height * 0.07,
         paddingBottom: height * 0.01,
     },
     navigationBar: {
@@ -261,10 +281,9 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
-    // Active tab style
     activeNavButton: {
-        backgroundColor: '#ff7eb3',  // Highlight the active tab with a background color
-        borderRadius: 10,  // Optional: to add some roundness to the active tab
+        backgroundColor: '#ff7eb3',
+        borderRadius: 10,
     },
     shadow: {
         shadowColor: '#000',
@@ -277,19 +296,18 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Semi-transparent background for modal
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     overlayContent: {
         width: '85%',
-        height: '60%',  // Modal height to make it scrollable
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',  // Transparent white background
+        height: '60%',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
         borderRadius: 10,
         padding: 20,
         position: 'relative',
     },
-
     scrollContainer: {
-        paddingTop: 20,  // Add some padding at the top to create space for the close button
+        paddingTop: 20,
     },
     placeButton: {
         backgroundColor: '#fff',

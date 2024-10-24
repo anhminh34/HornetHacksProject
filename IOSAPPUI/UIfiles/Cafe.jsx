@@ -37,7 +37,7 @@ const CafeScreen = ({ navigation }) => {
                 <View style={{ flex: 1 }}>
                     {/* Background Image */}
                     <Image
-                        source={require('../assets/images/cafeInterior.png')}
+                        source={require('../assets/images/coffeeInterior.png')}
                         style={styles.backgroundImage}
                     />
 
@@ -128,10 +128,10 @@ const styles = StyleSheet.create({
     },
     characterContainer: {
         position: 'absolute',
-        bottom: 0, // Keep the character slightly above the bottom for responsiveness
+        bottom: height * -0.07, // Keep the character slightly above the bottom for responsiveness
         left: '50%',
-        marginLeft: -(width * 0.55), // Adjust to properly center the character
-        width: width * 1.1, // Allow the character to take more width of the screen
+        marginLeft: -(width * 0.53), // Adjust to properly center the character
+        width: width * 1.05, // Allow the character to take more width of the screen
         height: height, // Increase the height to make the character larger
         zIndex: 1,
     },
