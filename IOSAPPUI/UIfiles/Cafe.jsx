@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Animated, Easing, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +26,18 @@ const CafeScreen = ({ navigation }) => {
             easing: Easing.ease,
             useNativeDriver: true,
         }).start(() => setModalVisible(false));
+    };
+    
+    // function to send data back to python backend with axios
+    const sendDataToBack = async () => {
+        try{
+            console.log('Send button pressed')
+            const response = await axios.post('http://127.0.0.1:5000/process-input', {inputValue: text});
+            console.log(response.data)
+            setResponseMessage(response.data);
+        } catch(error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -71,7 +84,7 @@ const CafeScreen = ({ navigation }) => {
                     {/* Send Button */}
                     <TouchableOpacity
                         style={styles.respondButton}
-                        onPress={() => console.log('Send button pressed')} // HERE IS THE BUTTON MINH
+                        onPress={sendDataToBack} // Added connection to backend - Daniel
                         activeOpacity={0.6}
                     >
                         <Text style={styles.respondButtonText} allowFontScaling={false}>Respond</Text>
