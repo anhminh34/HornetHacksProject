@@ -67,6 +67,7 @@ const LoadingScreen = () => {
                     styles.loadingText,
                     { opacity: fadeAnim }, // Apply fade-in effect to the text
                 ]}
+                allowFontScaling={false} // Disable font scaling for the text
             >
                 {randomPhrase}
             </Animated.Text>
@@ -82,17 +83,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#F7F7F7', // Background color for the loading screen
     },
     logoContainer: {
-        marginBottom: 50,
+        marginBottom: height * 0.05,  // Adjust margin relative to screen height
     },
     logo: {
         width: width * 0.5, // Adjust the logo size to half the screen width
-        height: width * 0.5,
+        height: width * 0.5, // Ensure the height matches the width
         resizeMode: 'contain',
     },
     loadingText: {
-        fontSize: 24,
+        fontSize: height * 0.03,  // Responsive font size based on screen height
         fontWeight: 'bold',
         color: '#333', // Darker text color for contrast
+        textAlign: 'center',
+        paddingHorizontal: width * 0.1,  // Ensure text fits within the screen width
     },
 });
 

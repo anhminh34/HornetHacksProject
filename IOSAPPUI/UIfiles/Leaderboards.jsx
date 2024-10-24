@@ -43,30 +43,30 @@ const LeaderboardScreen = ({ navigation }) => {
                 colors={['#ff758c', '#ff7eb3']}  // Pinkish-purple gradient
                 style={styles.topThreeContainer}
             >
-                <Text style={styles.title}>LEADERBOARD</Text>
+                <Text style={styles.title} allowFontScaling={false}>LEADERBOARD</Text>
                 <View style={styles.topThreeRow}>
                     {/* Second place on the left */}
                     <View style={styles.secondPlaceItem}>
-                        <Text style={styles.rankLabel}>2</Text>
+                        <Text style={styles.rankLabel} allowFontScaling={false}>2</Text>
                         <Image source={leaderboardData[1].profilePicture} style={styles.userIconSecondPlace} />
-                        <Text style={styles.playerName}>{leaderboardData[1].name}</Text>
-                        <Text style={styles.playerScore}>{leaderboardData[1].score.toString()}</Text>
+                        <Text style={styles.playerName} allowFontScaling={false}>{leaderboardData[1].name}</Text>
+                        <Text style={styles.playerScore} allowFontScaling={false}>{leaderboardData[1].score.toString()}</Text>
                     </View>
 
                     {/* First place in the middle */}
                     <View style={styles.firstPlaceItem}>
-                        <Text style={styles.rankLabel}>1</Text>
+                        <Text style={styles.rankLabel} allowFontScaling={false}>1</Text>
                         <Image source={leaderboardData[0].profilePicture} style={styles.userIconFirstPlace} />
-                        <Text style={styles.playerName}>{leaderboardData[0].name}</Text>
-                        <Text style={styles.playerScore}>{leaderboardData[0].score.toString()}</Text>
+                        <Text style={styles.playerName} allowFontScaling={false}>{leaderboardData[0].name}</Text>
+                        <Text style={styles.playerScore} allowFontScaling={false}>{leaderboardData[0].score.toString()}</Text>
                     </View>
 
                     {/* Third place on the right */}
                     <View style={styles.thirdPlaceItem}>
-                        <Text style={styles.rankLabel}>3</Text>
+                        <Text style={styles.rankLabel} allowFontScaling={false}>3</Text>
                         <Image source={leaderboardData[2].profilePicture} style={styles.userIconThirdPlace} />
-                        <Text style={styles.playerName}>{leaderboardData[2].name}</Text>
-                        <Text style={styles.playerScore}>{leaderboardData[2].score.toString()}</Text>
+                        <Text style={styles.playerName} allowFontScaling={false}>{leaderboardData[2].name}</Text>
+                        <Text style={styles.playerScore} allowFontScaling={false}>{leaderboardData[2].score.toString()}</Text>
                     </View>
                 </View>
             </LinearGradient>
@@ -87,12 +87,12 @@ const LeaderboardScreen = ({ navigation }) => {
                         style={[styles.leaderboardItem, { backgroundColor: getBackgroundColor(player.rank) }]}
                     >
                         <View style={styles.rankAndIconContainer}>
-                            <Text style={styles.rankText}>{player.rank.toString()}</Text>
+                            <Text style={styles.rankText} allowFontScaling={false}>{player.rank.toString()}</Text>
                             <Image source={player.profilePicture} style={styles.userIconMainList} />
                         </View>
                         <View style={styles.nameAndScoreContainer}>
-                            <Text style={styles.playerNameSmall}>{player.name}</Text>
-                            <Text style={styles.playerScoreSmall}>{player.score.toString()}</Text>
+                            <Text style={styles.playerNameSmall} allowFontScaling={false}>{player.name}</Text>
+                            <Text style={styles.playerScoreSmall} allowFontScaling={false}>{player.score.toString()}</Text>
                         </View>
                     </View>
                 ))}
@@ -107,9 +107,9 @@ const LeaderboardScreen = ({ navigation }) => {
             >
                 <View style={styles.overlayContainer}>
                     <View style={styles.overlayContent}>
-                        <Text style={styles.overlayText}>This weekly leaderboard tracks how well you navigate social and romantic situations, helping you improve your interpersonal skills over time.</Text>
+                        <Text style={styles.overlayText} allowFontScaling={false}>This weekly leaderboard tracks how well you navigate social and romantic situations, helping you improve your interpersonal skills over time.</Text>
                         <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
-                            <Text style={styles.closeButtonText}>Close</Text>
+                            <Text style={styles.closeButtonText} allowFontScaling={false}>Close</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -200,22 +200,22 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     userIconFirstPlace: {
-        width: width * 0.28,  // Bigger size for first place
+        width: width * 0.28,
         height: width * 0.28,
-        borderRadius: width * 0.2,  // Circular profile picture
-        resizeMode: 'cover',  // Zoom in to fit the container
+        borderRadius: width * 0.2,
+        resizeMode: 'cover',
     },
     userIconSecondPlace: {
-        width: width * 0.18,  // Medium size for second place
+        width: width * 0.18,
         height: width * 0.18,
-        borderRadius: width * 0.09,  // Circular profile picture
-        resizeMode: 'cover',  // Zoom in to fit the container
+        borderRadius: width * 0.09,
+        resizeMode: 'cover',
     },
     userIconThirdPlace: {
-        width: width * 0.18,  // Smaller size for third place
+        width: width * 0.18,
         height: width * 0.18,
-        borderRadius: width * 0.09,  // Circular profile picture
-        resizeMode: 'cover',  // Zoom in to fit the container
+        borderRadius: width * 0.09,
+        resizeMode: 'cover',
     },
     playerName: {
         fontSize: height * 0.02,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     },
     playerScore: {
         fontSize: height * 0.02,
-        color: '#FFD700',  // Color for scores
+        color: '#FFD700',
     },
     spacing: {
         height: height * 0.05,
@@ -251,8 +251,8 @@ const styles = StyleSheet.create({
     userIconMainList: {
         width: width * 0.09,
         height: width * 0.09,
-        borderRadius: width * 0.06,  // Circular profile picture for main list
-        resizeMode: 'cover',  // Zoom in to fit the container
+        borderRadius: width * 0.06,
+        resizeMode: 'cover',
     },
     nameAndScoreContainer: {
         flexDirection: 'row',
@@ -295,47 +295,46 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
-    // Styles for the info button and modal
     infoButton: {
         position: 'absolute',
-        top: height * 0.08,  // Adjusted to make it slightly lower
+        top: height * 0.08,
         right: width * 0.05,
         zIndex: 10,
     },
     infoIcon: {
-        width: width * 0.08,  // Adjusted width for responsiveness
-        height: width * 0.08,  // Adjusted height for responsiveness
+        width: width * 0.08,
+        height: width * 0.08,
         resizeMode: 'contain',
     },
     overlayContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',  // Semi-transparent background
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     overlayContent: {
-        width: '85%',  // Adjusted width for responsiveness
+        width: '85%',
         backgroundColor: '#FFF',
-        paddingVertical: height * 0.03,  // Responsive vertical padding
-        paddingHorizontal: width * 0.05,  // Responsive horizontal padding
+        paddingVertical: height * 0.03,
+        paddingHorizontal: width * 0.05,
         borderRadius: 10,
         alignItems: 'center',
     },
     overlayText: {
-        fontSize: height * 0.02,  // Responsive font size
+        fontSize: height * 0.02,
         color: '#333',
-        marginBottom: height * 0.03,  // Responsive margin
+        marginBottom: height * 0.03,
     },
     closeButton: {
         backgroundColor: '#FF5A5F',
-        paddingVertical: height * 0.015,  // Responsive padding
-        paddingHorizontal: width * 0.1,   // Responsive padding
+        paddingVertical: height * 0.015,
+        paddingHorizontal: width * 0.1,
         borderRadius: 5,
     },
     closeButtonText: {
         color: '#FFF',
         fontWeight: 'bold',
-        fontSize: height * 0.02,  // Responsive font size
+        fontSize: height * 0.02,
     },
 });
 

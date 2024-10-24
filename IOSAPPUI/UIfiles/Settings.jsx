@@ -81,14 +81,14 @@ const SettingsScreen = ({ navigation }) => {
             {/* Settings UI */}
             <View style={styles.settingsContainer}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.profileName}>Username</Text>
-                    <Text style={styles.rank}>Clueless</Text>
+                    <Text style={styles.profileName} allowFontScaling={false}>Username</Text>
+                    <Text style={styles.rank} allowFontScaling={false}>Clueless</Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>App Settings</Text>
+                    <Text style={styles.sectionTitle} allowFontScaling={false}>App Settings</Text>
                     <View style={styles.settingItem}>
-                        <Text style={styles.settingText}>Notifications</Text>
+                        <Text style={styles.settingText} allowFontScaling={false}>Notifications</Text>
                         <Switch
                             onValueChange={toggleNotifications}
                             value={notificationsEnabled}
@@ -97,17 +97,17 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Account</Text>
+                    <Text style={styles.sectionTitle} allowFontScaling={false}>Account</Text>
                     <TouchableOpacity style={styles.settingItem}>
-                        <Text style={styles.settingText}>Change Password</Text>
+                        <Text style={styles.settingText} allowFontScaling={false}>Change Password</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.settingItem}>
-                        <Text style={styles.settingText}>Manage Account</Text>
+                        <Text style={styles.settingText} allowFontScaling={false}>Manage Account</Text>
                     </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.logoutButton}>
-                    <Text style={styles.logoutText}>Log Out</Text>
+                    <Text style={styles.logoutText} allowFontScaling={false}>Log Out</Text>
                 </TouchableOpacity>
 
             </View>
@@ -144,9 +144,10 @@ const styles = StyleSheet.create({
     },
     banner: {
         width: '100%',
-        height: height * 0.3,  // Reduce the height of the banner for more space
+        height: height * 0.3,  // Make the height smaller to prevent overlap
         position: 'relative',
         backgroundColor: '#ddd',
+        marginBottom: height * -0.03,
     },
     bannerImage: {
         width: '100%',
@@ -155,47 +156,44 @@ const styles = StyleSheet.create({
     },
     profilePictureWrapper: {
         position: 'absolute',
-        left: width * 0.05,
-        bottom: -height * 0.04,
-        width: width * 0.25,  // Reduce profile picture size for more space
-        height: width * 0.25,
+        left: '5%',  // Percentage to make it responsive
+        bottom: -height * 0.05,  // Slight adjustment to avoid overlap
+        width: width * 0.22,  // Profile picture relative to screen width
+        height: width * 0.22,
     },
     profilePicture: {
         width: '100%',
         height: '100%',
-        borderRadius: width * 0.2   ,
+        borderRadius: width * 0.11,  // Half of the width for a perfect circle
         borderWidth: 3,
         borderColor: '#23171E',
     },
     settingsContainer: {
-        marginTop: 30,
-        paddingHorizontal: 20,
-        paddingBottom: 50,  // Ensure content doesn't overlap with nav bar
+        marginTop: height * 0.1,  // Adjust for better responsiveness
+        paddingHorizontal: '5%',
     },
     profileName: {
         fontSize: height * 0.025,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#fff',
-        marginTop: 10,
     },
     nameContainer: {
         marginBottom: height * 0.02,
     },
     rank: {
-        fontSize: height * 0.018,
+        fontSize: height * 0.02,
         color: '#fff',
         textAlign: 'center',
-        marginTop: height * 0.005,
     },
     section: {
-        marginBottom: height * 0.025,  // Reduce bottom margin for more space
+        marginBottom: height * 0.03,
     },
     sectionTitle: {
-        fontSize: 16,
+        fontSize: height * 0.02,
         fontWeight: 'bold',
-        marginBottom: 10,
         color: "#fff",
+        marginBottom: height * 0.01,
     },
     settingItem: {
         flexDirection: 'row',
@@ -204,20 +202,20 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.01,
     },
     settingText: {
-        fontSize: 15,
+        fontSize: height * 0.02,
         color: "#fff",
     },
     logoutButton: {
         backgroundColor: '#FF5A5F',
-        paddingVertical: height * 0.015,  // Reduce padding to make space for other content
+        paddingVertical: height * 0.02,
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: height * 0.04,
+        marginTop: height * 0.05,
     },
     logoutText: {
         color: '#FFF',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: height * 0.02,
     },
     navigationBar: {
         flexDirection: 'row',

@@ -37,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
         // Show the loading screen
         setIsLoading(true);
 
-        // Delay for a few seconds (e.g., 3 seco    nds) then navigate to CafeScreen
+        // Delay for a few seconds (e.g., 3 seconds) then navigate to CafeScreen
         setTimeout(() => {
             setIsLoading(false); // Hide the loading screen
             navigation.navigate('Cafe'); // Navigate to CafeScreen after loading
@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
 
             {/* Title */}
             <View style={styles.titleButton}>
-                <Text style={styles.title}>COFFEE SHOP</Text>
+                <Text style={styles.title} allowFontScaling={false}>COFFEE SHOP</Text>
             </View>
 
             {/* Play Button */}
@@ -76,7 +76,7 @@ const HomeScreen = ({ navigation }) => {
                 activeOpacity={0.7}  // Adjust the opacity level when pressed
                 onPress={handlePlayPress}
             >
-                <Text style={styles.playButtonText}>PLAY</Text>
+                <Text style={styles.playButtonText} allowFontScaling={false}>PLAY</Text>
             </TouchableOpacity>
 
             {/* Bottom Navigation */}
@@ -142,11 +142,11 @@ const styles = StyleSheet.create({
     },
     titleButton: {
         position: 'absolute',
-        top: '10%',  // Make the position relative to screen height
+        top: '10%',
         backgroundColor: '#6C3429',
         borderRadius: 50,
-        paddingHorizontal: '10%',  // Use percentages for padding
-        height: height * 0.08,  // Make height relative to screen height
+        paddingHorizontal: '10%',
+        height: height * 0.08,
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
@@ -162,11 +162,11 @@ const styles = StyleSheet.create({
     playButton: {
         backgroundColor: '#3EAC36',
         borderRadius: 50,
-        width: width * 0.45,    // Set width relative to screen width
-        height: height * 0.06,    // Set height relative to screen height
+        width: width * 0.45,
+        height: height * 0.06,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: '20%',  // Use percentage for marginTop for better responsiveness
+        marginTop: '20%',
     },
     playButtonText: {
         color: '#fff',
@@ -204,6 +204,5 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
 });
-
 
 export default HomeScreen;
