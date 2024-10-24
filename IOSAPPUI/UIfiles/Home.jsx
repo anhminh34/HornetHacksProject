@@ -1,99 +1,170 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, Modal, Animated } from 'react-native';
 import LoadingScreen from './Loading'; // Import the LoadingScreen component
 import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen'; // Import SplashScreen from expo-splash-screen
+import * as SplashScreen from 'expo-splash-screen';
 
-// Get screen dimensions for responsive design
 const { width, height } = Dimensions.get('window');
 
-// Function to load custom fonts
 const loadFonts = async () => {
     await Font.loadAsync({
-        'Jomhuria-Regular': require('../assets/fonts/Jomhuria-Regular.ttf'), // Path to your font file
+        'Jomhuria-Regular': require('../assets/fonts/Jomhuria-Regular.ttf'),
     });
 };
 
 const HomeScreen = ({ navigation }) => {
     const [fontsLoaded, setFontsLoaded] = useState(false);
-    const [isLoading, setIsLoading] = useState(false); // Control when to show the loading screen
+    const [isLoading, setIsLoading] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const scaleAnim = useRef(new Animated.Value(0)).current; // Create animated value for scaling
 
-    // Load the font before rendering
     useEffect(() => {
         const loadResources = async () => {
             await loadFonts();
             setFontsLoaded(true);
-            await SplashScreen.hideAsync(); // Hide the splash screen
+            await SplashScreen.hideAsync();
         };
 
         loadResources();
     }, []);
 
     if (!fontsLoaded) {
-        return null; // Prevent rendering until fonts are loaded
+        return null;
     }
 
     const handlePlayPress = () => {
-        // Show the loading screen
         setIsLoading(true);
 
-        // Delay for a few seconds (e.g., 3 seco    nds) then navigate to CafeScreen
         setTimeout(() => {
-            setIsLoading(false); // Hide the loading screen
-            navigation.navigate('Cafe'); // Navigate to CafeScreen after loading
-        }, 3000); // 3000 ms = 3 seconds delay
+            setIsLoading(false);
+            navigation.navigate('Cafe');
+        }, 3000);
+    };
+
+    const showModal = () => {
+        setModalVisible(true);
+        Animated.timing(scaleAnim, {
+            toValue: 1, // Scale to full size
+            duration: 150, // Animation duration in milliseconds
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const hideModal = () => {
+        Animated.timing(scaleAnim, {
+            toValue: 0, // Scale back to hidden
+            duration: 150,
+            useNativeDriver: true,
+        }).start(() => setModalVisible(false));
     };
 
     if (isLoading) {
-        return <LoadingScreen />; // Show the loading screen during the delay
+        return <LoadingScreen />;
     }
+
+    const currentRoute = navigation.getState().routes[navigation.getState().index].name;
 
     return (
         <View style={styles.container}>
             {/* City with Shadow */}
             <View style={styles.cityContainer}>
                 <Image
-                    source={require('../assets/images/city1.png')}  // Background image path
-                    style={styles.backgroundImage}  // Custom style for image positioning
+                    source={require('../assets/images/city1.png')}
+                    style={styles.backgroundImage}
                 />
             </View>
+
             {/* Cafe with Shadow */}
             <View style={styles.cafeContainer}>
                 <Image
-                    source={require('../assets/images/cafe.png')}  // Background image path
-                    style={styles.backgroundImage}  // Custom style for image positioning
+                    source={require('../assets/images/cafe.png')}
+                    style={styles.backgroundImage}
                 />
             </View>
 
             {/* Title */}
             <View style={styles.titleButton}>
-                <Text style={styles.title}>COFFEE SHOP</Text>
+                <Text style={styles.title} allowFontScaling={false}>COFFEE SHOP</Text>
             </View>
+
+            {/* Map Button */}
+            <TouchableOpacity onPress={showModal} style={styles.mapButton}>
+                <View style={styles.mapButtonCircle}>
+                    <Image source={require('../assets/icons/mapIcon.png')} style={styles.mapIcon} />
+                </View>
+            </TouchableOpacity>
 
             {/* Play Button */}
             <TouchableOpacity
                 style={[styles.playButton, styles.shadow]}
-                activeOpacity={0.7}  // Adjust the opacity level when pressed
+                activeOpacity={0.7}
                 onPress={handlePlayPress}
             >
-                <Text style={styles.playButtonText}>PLAY</Text>
+                <Text style={styles.playButtonText} allowFontScaling={false}>PLAY</Text>
             </TouchableOpacity>
 
             {/* Bottom Navigation */}
             <View style={styles.navigationBar}>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Home' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Leaderboard' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Heart' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Heart')}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Settings' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
             </View>
+
+            {/* Modal for the list of places */}
+            <Modal
+                transparent={true}
+                visible={modalVisible}
+                animationType="none"
+                onRequestClose={hideModal}
+            >
+                <View style={styles.overlayContainer}>
+                    <Animated.View style={[styles.overlayContent, { transform: [{ scale: scaleAnim }] }]}>
+                        {/* Scrollable list of places */}
+                        <ScrollView contentContainerStyle={styles.scrollContainer}>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 1 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>Coffee Shop</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 2 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>Fancy Restaurant</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 3 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>Movie Theatre</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 4 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>Amusement Park</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 5 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>Beach</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.placeButton} onPress={() => console.log('Place 6 clicked')}>
+                                <Text style={styles.placeText} allowFontScaling={false}>House</Text>
+                            </TouchableOpacity>
+                        </ScrollView>
+
+                        {/* Close Button */}
+                        <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
+                            <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
+                        </TouchableOpacity>
+                    </Animated.View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -112,64 +183,83 @@ const styles = StyleSheet.create({
         marginLeft: -width * 0.55,
         width: width * 1.1,
         height: height * 0.55,
-        shadowColor: '#000',            // Shadow color for iOS
-        shadowOffset: { width: 0, height: 4 },  // Shadow position (width = horizontal, height = vertical)
-        shadowOpacity: 0.8,             // Shadow transparency for iOS
-        shadowRadius: 5,                // How blurred the shadow is
-        elevation: 8,                   // Elevation for Android (increases shadow size)
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.8,
+        shadowRadius: 5,
+        elevation: 8,
     },
     cafeContainer: {
         position: 'absolute',
         bottom: height * 0.06,
         left: '50%',
-        marginLeft: -(width * 1.1 / 2) / 2,   // Adjusted margin for centering
-        width: width * 1.1 / 2,               // Reduced width by 1.5 times
-        height: height * 0.55 / 2,            // Reduced height by 1.5 times
-        shadowColor: '#000',                    // Shadow color for iOS
-        shadowOffset: { width: 0, height: 4 },  // Shadow position (width = horizontal, height = vertical)
-        shadowOpacity: 0.6,                     // Shadow transparency for iOS
-        shadowRadius: 5,                        // How blurred the shadow is
-        elevation: 8,                           // Elevation for Android (increases shadow size)
+        marginLeft: -(width * 1.1 / 2) / 2,
+        width: width * 1.1 / 2,
+        height: height * 0.55 / 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.6,
+        shadowRadius: 5,
+        elevation: 8,
     },
     backgroundImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'contain',  // Ensure the image scales properly within its container
+        resizeMode: 'contain',
     },
     titleButton: {
         position: 'absolute',
-        top: 80,
+        top: '10%',
         backgroundColor: '#6C3429',
         borderRadius: 50,
-        paddingHorizontal: 40,  // Controls the horizontal padding for the button
-        height: 60,             // Adjust the height to fit the large font
+        paddingHorizontal: '10%',
+        height: height * 0.08,
         alignSelf: 'center',
-        justifyContent: 'center',  // Ensure the text is centered vertically
-        alignItems: 'center',      // Ensure the text is centered horizontally
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
-        fontSize: 50,
+        fontSize: height * 0.06,
         color: '#FFE5C2',
-        fontFamily: 'Jomhuria-Regular',  // Apply custom font
+        fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: 65,    // Set lineHeight equal to fontSize to vertically center the text
-        marginVertical: 0, // Ensure no additional vertical margin that could interfere with centering
+        lineHeight: height * 0.06,
+        marginVertical: 0,
+    },
+    mapButton: {
+        position: 'absolute',
+        top: height * 0.22,
+        left: width * 0.035,
+        zIndex: 10,
+    },
+    mapButtonCircle: {
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        borderRadius: 50,
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    mapIcon: {
+        width: width * 0.08,
+        height: width * 0.08,
+        resizeMode: 'contain',
     },
     playButton: {
         backgroundColor: '#3EAC36',
         borderRadius: 50,
-        width: 200,    // Fixed width for the button
-        height: 60,    // Increased height to better fit the large text
-        alignItems: 'center',  // Center the text horizontally
-        justifyContent: 'center', // Center the text vertically
-        marginTop: 150,
+        width: width * 0.45,
+        height: height * 0.06,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '20%',
     },
     playButtonText: {
         color: '#fff',
-        fontSize: 60,
-        fontFamily: 'Jomhuria-Regular',  // Apply custom font
+        fontSize: height * 0.06,
+        fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: 70,   // Set lineHeight equal to fontSize to center the text vertically
+        lineHeight: height * 0.07,
+        paddingBottom: height * 0.01,
     },
     navigationBar: {
         flexDirection: 'row',
@@ -179,6 +269,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: '#23171E',
         paddingBottom: 30,
+        paddingTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#FFF',
     },
     navButton: {
         padding: 10,
@@ -188,12 +281,55 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
+    activeNavButton: {
+        backgroundColor: '#ff7eb3',
+        borderRadius: 10,
+    },
     shadow: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.6,
         shadowRadius: 4,
         elevation: 5,
+    },
+    overlayContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    overlayContent: {
+        width: '85%',
+        height: '60%',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: 10,
+        padding: 20,
+        position: 'relative',
+    },
+    scrollContainer: {
+        paddingTop: 20,
+    },
+    placeButton: {
+        backgroundColor: '#fff',
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        marginVertical: 10,
+    },
+    placeText: {
+        fontSize: height * 0.025,
+        color: '#333',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
+    },
+    closeIcon: {
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
     },
 });
 

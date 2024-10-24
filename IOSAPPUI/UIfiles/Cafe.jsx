@@ -5,65 +5,40 @@ import axios from 'axios';
 const { width, height } = Dimensions.get('window');
 
 const CafeScreen = ({ navigation }) => {
-    const [text, setText] = useState(''); // State to hold the input text
-    const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
-    const slideAnim = useRef(new Animated.Value(height)).current; // Create animated value for sliding (starts off-screen)
-    const [responseMessage, setResponseMessage] = useState(''); // Sets the response from the backend
+    const [text, setText] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const slideAnim = useRef(new Animated.Value(height)).current;
 
-    // Function to show the modal with sliding animation
     const showModal = () => {
-        console.log("Menu Button Pressed"); // Check if the button press is being registered
         setModalVisible(true);
         Animated.timing(slideAnim, {
-            toValue: 0, // Move modal into view (translateY to 0)
-            duration: 500,
-            easing: Easing.ease,
-            useNativeDriver: true, // Ensure native driver is used for better performance
-        }).start();
-    };
-
-    // Function to hide the modal with sliding animation
-    const hideModal = () => {
-        Animated.timing(slideAnim, {
-            toValue: height, // Slide it back off the screen
+            toValue: 0,
             duration: 500,
             easing: Easing.ease,
             useNativeDriver: true,
-        }).start(() => setModalVisible(false)); // Hide modal after the animation completes
+        }).start();
     };
 
+    const hideModal = () => {
+        Animated.timing(slideAnim, {
+            toValue: height,
+            duration: 500,
+            easing: Easing.ease,
+            useNativeDriver: true,
+        }).start(() => setModalVisible(false));
+    };
+    
     // function to send data back to python backend with axios
     const sendDataToBack = async () => {
         try{
-            const response = await axios.post('http://127.0.0.1:5000/process-input', {text: text});
+            console.log('Send button pressed')
+            const response = await axios.post('http://127.0.0.1:5000/process-input', {inputValue: text});
+            console.log(response.data)
             setResponseMessage(response.data);
         } catch(error) {
             console.error(error);
         }
     };
-
-    /*
-    //function to handle data transfer to backend with fetch
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        //send the input to the backend
-        fetch('http://127.0.0.1:5000/process-input', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({text}),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setResponseMessage(data.result);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-    };
-    */
-
 
     return (
         <KeyboardAvoidingView
@@ -71,59 +46,66 @@ const CafeScreen = ({ navigation }) => {
             style={{ flex: 1 }}
             keyboardVerticalOffset={-90}
         >
-            {/* Dismiss keyboard when tapping outside */}
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{ flex: 1 }}>
-                    {/* Background Image as a regular Image component */}
+                    {/* Background Image */}
                     <Image
-                        source={require('../assets/images/cafeInterior.png')} // Path to your background image
-                        style={styles.backgroundImage} // Apply styles to cover the entire screen
+                        source={require('../assets/images/coffeeInterior.png')}
+                        style={styles.backgroundImage}
                     />
 
                     {/* Character Image */}
                     <View style={styles.characterContainer}>
                         <Image
-                            source={require('../assets/images/Persephone.png')}  // Character image path
-                            style={styles.characterImage}  // Custom style for image positioning
+                            source={require('../assets/images/Persephone.png')}
+                            style={styles.characterImage}
                         />
                     </View>
 
-                    {/* Button in the top-left corner to open modal */}
+                    {/* Menu Button */}
                     <TouchableOpacity style={styles.topLeftButton} activeOpacity={0.7} onPress={showModal}>
-                        <Text style={styles.topLeftButtonText}>Menu</Text>
+                        <Text style={styles.topLeftButtonText} allowFontScaling={false}>Menu</Text>
                     </TouchableOpacity>
 
-                    {/* Semi-Transparent Black Box || CHANGE TEXT WITH AI RESPONSE*/}
+                    {/* Text Box */}
                     <View style={styles.bottomBox}>
-                        {responseMessage ? <Text style={styles.boxText}>{responseMessage}</Text>: null}
-
+                        <Text style={styles.boxText} allowFontScaling={false}>Hey. What type of Coffee do you like?</Text>
                     </View>
 
-                    {/* Input Text Area */}
+                    {/* Input Field */}
                     <TextInput
-                        style={styles.input} // Style for the input field
-                        placeholder="Answer Her" // Placeholder text
-                        placeholderTextColor="#fff" // Placeholder text color
-                        value={text} // Bind the input value to state
-                        onChangeText={setText} // Update the text when the user types
+                        style={styles.input}
+                        placeholder="Answer Her"
+                        placeholderTextColor="#fff"
+                        value={text}
+                        onChangeText={setText}
                     />
+
+                    {/* Send Button */}
+                    <TouchableOpacity
+                        style={styles.respondButton}
+                        onPress={sendDataToBack} // Added connection to backend - Daniel
+                        activeOpacity={0.6}
+                    >
+                        <Text style={styles.respondButtonText} allowFontScaling={false}>Respond</Text>
+                    </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
 
-            {/* Modal for the slide-up overlay */}
+            {/* Modal */}
             <Modal
                 transparent={true}
                 visible={modalVisible}
-                animationType="none" // Disable default animation, we handle it ourselves
+                animationType="none"
             >
                 <View style={styles.modalContainer}>
                     <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
-                        <Text style={styles.modalTitle}>End Session?</Text>
+                        <Text style={styles.modalTitle} allowFontScaling={false}>End Session?</Text>
                         <TouchableOpacity style={styles.choiceButton1} onPress={hideModal}>
-                            <Text style={styles.choiceButtonText1}>Keep Playing</Text>
+                            <Text style={styles.choiceButtonText1} allowFontScaling={false}>Keep Playing</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.choiceButton2} onPress={() => navigation.navigate('Home')}>
-                            <Text style={styles.choiceButtonText2}>Go Home</Text>
+                            <Text style={styles.choiceButtonText2} allowFontScaling={false}>Go Home</Text>
                         </TouchableOpacity>
                     </Animated.View>
                 </View>
@@ -139,19 +121,19 @@ const styles = StyleSheet.create({
         left: 0,
         width: '100%',
         height: '100%',
-        resizeMode: 'cover', // Cover the entire screen with the background image
-        zIndex: 0, // Ensure the image is in the background
+        resizeMode: 'cover',
+        zIndex: 0,
     },
     topLeftButton: {
         position: 'absolute',
-        top: 70, // Adjust this value to move the button down
+        top: 70, // This can be adjusted based on need
         left: 20,
-        backgroundColor: '#000', // Dark brown with 80% opacity
+        backgroundColor: '#000',
         paddingHorizontal: 40,
         paddingVertical: 10,
         borderRadius: 10,
         opacity: 0.8,
-        zIndex: 2, // Ensure the button appears above images
+        zIndex: 2,
     },
     topLeftButtonText: {
         color: '#fff',
@@ -159,51 +141,68 @@ const styles = StyleSheet.create({
     },
     characterContainer: {
         position: 'absolute',
-        bottom: 0,
+        bottom: height * -0.07, // Keep the character slightly above the bottom for responsiveness
         left: '50%',
-        marginLeft: -(width * 1.1 / 0.55) / 2,   // Adjusted margin for centering
-        width: width * 1.1 / 0.55,               // Reduced width by 1.5 times
-        height: height * 0.55 / 0.55,            // Reduced height by 1.5 times
-        zIndex: 1, // Ensure character is above background but below button and modal
+        marginLeft: -(width * 0.54), // Adjust to properly center the character
+        width: width * 1.05, // Allow the character to take more width of the screen
+        height: height, // Increase the height to make the character larger
+        zIndex: 1,
     },
     characterImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'contain',  // Ensure the image scales properly within its container
+        resizeMode: 'contain', // Ensure it maintains the aspect ratio
     },
     bottomBox: {
         position: 'absolute',
-        bottom: height * 0.2, // Adjusted to give space for the input field
-        width: '100%', // Full width of the screen
-        height: height * 0.12, // Adjustable height for the black box
-        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent black
+        bottom: height * 0.25,
+        width: '100%',
+        height: height * 0.12,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1, // Ensure it's above the background but below the button and modal
+        zIndex: 1,
     },
     boxText: {
-        color: '#fff', // White text color for visibility
+        color: '#fff',
         fontSize: 18,
         marginHorizontal: 10,
     },
     input: {
         color: '#fff',
         position: 'absolute',
-        bottom: height * 0.12, // Place it slightly above the bottom of the screen
-        width: '100%', // Full width of the screen
-        height: 50, // Adjust the height as needed
-        backgroundColor: '#000', // Black background for the input
-        borderRadius: 0, // More rounded corners for the input box
-        paddingHorizontal: 20, // Padding inside the input box
-        fontSize: 16, // Font size for input text
+        bottom: height * 0.18,
+        width: '100%',
+        height: 50,
+        backgroundColor: '#000',
+        borderRadius: 0,
+        paddingHorizontal: 20,
+        fontSize: 16,
         opacity: 0.8,
-        zIndex: 1, // Ensure it's above the background but below the button and modal
+        zIndex: 1,
+    },
+    respondButton: {
+        position: 'absolute',
+        bottom: height * 0.10,
+        width: 150,
+        height: 50,
+        backgroundColor: '#ff7eb3',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 25,
+        left: '50%',
+        marginLeft: -75,
+        zIndex: 1,
+    },
+    respondButtonText: {
+        color: '#fff',
+        fontSize: 18,
     },
     modalContainer: {
         flex: 1,
-        justifyContent: 'flex-end', // Position the modal content at the bottom
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add semi-transparent background for better visibility
-        zIndex: 3, // Ensure modal is the topmost layer
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 3,
     },
     modalContent: {
         width: '100%',
@@ -225,9 +224,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     choiceButton2: {
-        backgroundColor: 'transparent',   // Transparent inside
-        borderWidth: 2,                   // Set the border width
-        borderColor: '#FF4A4A',           // Red outline
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: '#FF4A4A',
         padding: 15,
         borderRadius: 10,
         marginBottom: 10,
