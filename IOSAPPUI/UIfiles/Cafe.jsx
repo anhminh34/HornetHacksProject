@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Modal, Animated, Easing, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,10 +32,18 @@ const CafeScreen = ({ navigation }) => {
         }).start(() => setModalVisible(false)); // Hide modal after the animation completes
     };
 
+    // function to send data back to python backend with axios
+    const sendDataToBack = async () => {
+        try{
+            const response = await axios.post('http://127.0.0.1:5000/process-input', {text: text});
+            setResponseMessage(response.data);
+        } catch(error) {
+            console.error(error);
+        }
+    };
 
-
-
-    //function to handle form submission
+    /*
+    //function to handle data transfer to backend with fetch
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -53,7 +62,7 @@ const CafeScreen = ({ navigation }) => {
             });
 
     };
-
+    */
 
 
     return (
@@ -86,7 +95,8 @@ const CafeScreen = ({ navigation }) => {
 
                     {/* Semi-Transparent Black Box || CHANGE TEXT WITH AI RESPONSE*/}
                     <View style={styles.bottomBox}>
-                        <Text style={styles.boxText}>Hey. What type of Coffee do you like?</Text>
+                        {responseMessage ? <Text style={styles.boxText}>{responseMessage}</Text>: null}
+
                     </View>
 
                     {/* Input Text Area */}

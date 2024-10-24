@@ -10,8 +10,10 @@ def process_input():
     data = request.json() # Get the JSON from React front end
     userinput = data.get("inputValue")
     response = pipe(userinput)
+    testinput = "What type of coffee do you like?"
+    testresponse = pipe(testinput)
 
-    result = f"Processed input: {response}"
+    result = f"Processed input: {testresponse}"
     return jsonify(result)
 
 
