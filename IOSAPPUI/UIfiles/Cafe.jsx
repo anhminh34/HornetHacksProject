@@ -70,11 +70,11 @@ const CafeScreen = ({ navigation }) => {
 
                     {/* Send Button */}
                     <TouchableOpacity
-                        style={styles.sendButton}
-                        onPress={() => console.log('Send button pressed')}
+                        style={styles.respondButton}
+                        onPress={() => console.log('Send button pressed')} // HERE IS THE BUTTON MINH
                         activeOpacity={0.6}
                     >
-                        <Text style={styles.sendButtonText} allowFontScaling={false}>Send</Text>
+                        <Text style={styles.respondButtonText} allowFontScaling={false}>Respond</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         opacity: 0.8,
         zIndex: 1,
     },
-    sendButton: {
+    respondButton: {
         position: 'absolute',
         bottom: height * 0.10,
         width: 150,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         marginLeft: -75,
         zIndex: 1,
     },
-    sendButtonText: {
+    respondButtonText: {
         color: '#fff',
         fontSize: 18,
     },

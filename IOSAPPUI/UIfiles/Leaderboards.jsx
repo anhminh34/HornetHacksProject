@@ -12,7 +12,7 @@ const LeaderboardScreen = ({ navigation }) => {
         { rank: 2, name: 'SEAN', score: 5000, profilePicture: require('../assets/images/sean.jpg') },
         { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/images/Mathew.jpg') },
         { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/icons/userIcon.png') },
-        { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/fernProfile.jpg') },
+        { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/edison.png') },
     ];
 
     const getBackgroundColor = (rank) => {
