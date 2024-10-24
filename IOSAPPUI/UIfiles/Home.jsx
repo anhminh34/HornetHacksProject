@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     mapButton: {
         position: 'absolute',
         top: height * 0.22,  // Moved below the title
-        left: width * 0.05,
+        left: width * 0.035,
         zIndex: 10,
     },
     mapButtonCircle: {
@@ -282,11 +282,12 @@ const styles = StyleSheet.create({
     overlayContent: {
         width: '85%',
         height: '60%',  // Modal height to make it scrollable
-        backgroundColor: '#23171E',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',  // Transparent white background
         borderRadius: 10,
         padding: 20,
         position: 'relative',
     },
+
     scrollContainer: {
         paddingTop: 20,  // Add some padding at the top to create space for the close button
     },
