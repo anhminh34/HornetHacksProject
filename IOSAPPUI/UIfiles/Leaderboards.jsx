@@ -120,7 +120,7 @@ const LeaderboardScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity style={[styles.navButton, styles.activeNavButton]}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton}>
@@ -294,6 +294,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         resizeMode: 'contain',
+    },
+    // Active tab style
+    activeNavButton: {
+        backgroundColor: '#ff7eb3',  // Highlight the active tab with a background color
+        borderRadius: 10,  // Optional: to add some roundness to the active tab
     },
     infoButton: {
         position: 'absolute',

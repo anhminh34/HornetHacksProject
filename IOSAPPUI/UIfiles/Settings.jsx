@@ -17,6 +17,7 @@ const SettingsScreen = ({ navigation }) => {
     } = useContext(ImageContext);  // Access ImageContext
 
     const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
+
     // Function to pick banner image
     const pickBannerImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -127,8 +128,9 @@ const SettingsScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.navButton}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
+                {/* Settings Tab - Highlighted */}
                 <TouchableOpacity
-                    style={styles.navButton}
+                    style={[styles.navButton, styles.activeNavButton]}  // Highlight the active tab
                     onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     },
     banner: {
         width: '100%',
-        height: height * 0.3,  // Make the height smaller to prevent overlap
+        height: height * 0.3,
         position: 'relative',
         backgroundColor: '#ddd',
         marginBottom: height * -0.03,
@@ -156,20 +158,20 @@ const styles = StyleSheet.create({
     },
     profilePictureWrapper: {
         position: 'absolute',
-        left: '5%',  // Percentage to make it responsive
-        bottom: -height * 0.05,  // Slight adjustment to avoid overlap
-        width: width * 0.22,  // Profile picture relative to screen width
+        left: '5%',
+        bottom: -height * 0.05,
+        width: width * 0.22,
         height: width * 0.22,
     },
     profilePicture: {
         width: '100%',
         height: '100%',
-        borderRadius: width * 0.11,  // Half of the width for a perfect circle
+        borderRadius: width * 0.11,
         borderWidth: 3,
         borderColor: '#23171E',
     },
     settingsContainer: {
-        marginTop: height * 0.1,  // Adjust for better responsiveness
+        marginTop: height * 0.1,
         paddingHorizontal: '5%',
     },
     profileName: {
@@ -236,6 +238,11 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         resizeMode: 'contain',
+    },
+    // Active tab style
+    activeNavButton: {
+        backgroundColor: '#ff7eb3',  // Highlight the active tab with a background color
+        borderRadius: 10,  // Optional: to add some roundness to the active tab
     },
 });
 
