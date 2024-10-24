@@ -84,7 +84,9 @@ const HomeScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.navButton}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={styles.navButton}
+                    onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton}>
@@ -114,64 +116,65 @@ const styles = StyleSheet.create({
         marginLeft: -width * 0.55,
         width: width * 1.1,
         height: height * 0.55,
-        shadowColor: '#000',            // Shadow color for iOS
-        shadowOffset: { width: 0, height: 4 },  // Shadow position (width = horizontal, height = vertical)
-        shadowOpacity: 0.8,             // Shadow transparency for iOS
-        shadowRadius: 5,                // How blurred the shadow is
-        elevation: 8,                   // Elevation for Android (increases shadow size)
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.8,
+        shadowRadius: 5,
+        elevation: 8,
     },
     cafeContainer: {
         position: 'absolute',
         bottom: height * 0.06,
         left: '50%',
-        marginLeft: -(width * 1.1 / 2) / 2,   // Adjusted margin for centering
-        width: width * 1.1 / 2,               // Reduced width by 1.5 times
-        height: height * 0.55 / 2,            // Reduced height by 1.5 times
-        shadowColor: '#000',                    // Shadow color for iOS
-        shadowOffset: { width: 0, height: 4 },  // Shadow position (width = horizontal, height = vertical)
-        shadowOpacity: 0.6,                     // Shadow transparency for iOS
-        shadowRadius: 5,                        // How blurred the shadow is
-        elevation: 8,                           // Elevation for Android (increases shadow size)
+        marginLeft: -(width * 1.1 / 2) / 2,
+        width: width * 1.1 / 2,
+        height: height * 0.55 / 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.6,
+        shadowRadius: 5,
+        elevation: 8,
     },
     backgroundImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'contain',  // Ensure the image scales properly within its container
+        resizeMode: 'contain',
     },
     titleButton: {
         position: 'absolute',
-        top: 80,
+        top: '10%',  // Make the position relative to screen height
         backgroundColor: '#6C3429',
         borderRadius: 50,
-        paddingHorizontal: 40,  // Controls the horizontal padding for the button
-        height: 60,             // Adjust the height to fit the large font
+        paddingHorizontal: '10%',  // Use percentages for padding
+        height: height * 0.08,  // Make height relative to screen height
         alignSelf: 'center',
-        justifyContent: 'center',  // Ensure the text is centered vertically
-        alignItems: 'center',      // Ensure the text is centered horizontally
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
-        fontSize: 50,
+        fontSize: height * 0.06,  // Font size relative to screen height
         color: '#FFE5C2',
-        fontFamily: 'Jomhuria-Regular',  // Apply custom font
+        fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: 65,    // Set lineHeight equal to fontSize to vertically center the text
-        marginVertical: 0, // Ensure no additional vertical margin that could interfere with centering
+        lineHeight: height * 0.06,  // Set lineHeight to match font size
+        marginVertical: 0,
     },
     playButton: {
         backgroundColor: '#3EAC36',
         borderRadius: 50,
-        width: 200,    // Fixed width for the button
-        height: 60,    // Increased height to better fit the large text
-        alignItems: 'center',  // Center the text horizontally
-        justifyContent: 'center', // Center the text vertically
-        marginTop: 150,
+        width: width * 0.45,    // Set width relative to screen width
+        height: height * 0.06,    // Set height relative to screen height
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '20%',  // Use percentage for marginTop for better responsiveness
     },
     playButtonText: {
         color: '#fff',
-        fontSize: 60,
-        fontFamily: 'Jomhuria-Regular',  // Apply custom font
+        fontSize: height * 0.06,  // Set font size relative to screen height
+        fontFamily: 'Jomhuria-Regular',
         fontWeight: 'bold',
-        lineHeight: 70,   // Set lineHeight equal to fontSize to center the text vertically
+        lineHeight: height * 0.07,   // Set lineHeight equal to fontSize for centering
+        paddingBottom: height * 0.01,
     },
     navigationBar: {
         flexDirection: 'row',
@@ -182,8 +185,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#23171E',
         paddingBottom: 30,
         paddingTop: 10,
-        borderTopWidth: 1,  // Add a thin border on top
-        borderTopColor: '#FFF',  // Set the border color to white
+        borderTopWidth: 1,
+        borderTopColor: '#FFF',
     },
     navButton: {
         padding: 10,
@@ -201,5 +204,6 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
 });
+
 
 export default HomeScreen;

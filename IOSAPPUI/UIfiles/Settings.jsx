@@ -1,14 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, Switch, TouchableOpacity, StyleSheet, Image, Alert, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Dimensions } from 'react-native';
 import { ImageContext } from './ImageContext';  // Import the context
 
 const { width, height } = Dimensions.get('window');  // Get screen dimensions for responsiveness
 
 const SettingsScreen = ({ navigation }) => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-    const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
     // Use context values for images
     const {
@@ -19,8 +17,6 @@ const SettingsScreen = ({ navigation }) => {
     } = useContext(ImageContext);  // Access ImageContext
 
     const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
-    const toggleDarkMode = () => setDarkModeEnabled(previousState => !previousState);
-
     // Function to pick banner image
     const pickBannerImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -84,8 +80,10 @@ const SettingsScreen = ({ navigation }) => {
 
             {/* Settings UI */}
             <View style={styles.settingsContainer}>
-                <Text style={styles.profileName}>Username</Text>
-                <Text style={styles.rank}>Clueless</Text>
+                <View style={styles.nameContainer}>
+                    <Text style={styles.profileName}>Username</Text>
+                    <Text style={styles.rank}>Clueless</Text>
+                </View>
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>App Settings</Text>
@@ -94,13 +92,6 @@ const SettingsScreen = ({ navigation }) => {
                         <Switch
                             onValueChange={toggleNotifications}
                             value={notificationsEnabled}
-                        />
-                    </View>
-                    <View style={styles.settingItem}>
-                        <Text style={styles.settingText}>Dark Mode</Text>
-                        <Switch
-                            onValueChange={toggleDarkMode}
-                            value={darkModeEnabled}
                         />
                     </View>
                 </View>
@@ -128,7 +119,9 @@ const SettingsScreen = ({ navigation }) => {
                     onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={styles.navButton}
+                    onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton}>
@@ -142,7 +135,7 @@ const SettingsScreen = ({ navigation }) => {
             </View>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -151,7 +144,7 @@ const styles = StyleSheet.create({
     },
     banner: {
         width: '100%',
-        height: height * 0.35,  // Responsive banner height (35% of screen height)
+        height: height * 0.3,  // Reduce the height of the banner for more space
         position: 'relative',
         backgroundColor: '#ddd',
     },
@@ -162,38 +155,41 @@ const styles = StyleSheet.create({
     },
     profilePictureWrapper: {
         position: 'absolute',
-        left: width * 0.05,  // Position it 5% from the left of the screen
-        bottom: -height * 0.04,  // Responsive bottom positioning (6% of screen height)
-        width: width * 0.25,  // Profile picture size relative to screen width (25%)
-        height: width * 0.25,  // Keep it square
+        left: width * 0.05,
+        bottom: -height * 0.04,
+        width: width * 0.25,  // Reduce profile picture size for more space
+        height: width * 0.25,
     },
     profilePicture: {
-        width: '100%',  // Use 100% of the wrapper's width and height
+        width: '100%',
         height: '100%',
-        borderRadius: width * 0.125,  // Half of the width for a perfect circle
+        borderRadius: width * 0.2   ,
         borderWidth: 3,
         borderColor: '#23171E',
     },
     settingsContainer: {
-        marginTop: 20,
-        padding: 20,
-        paddingBottom: 80,  // Add padding at the bottom to avoid content overlap with the nav bar
+        marginTop: 30,
+        paddingHorizontal: 20,
+        paddingBottom: 50,  // Ensure content doesn't overlap with nav bar
     },
     profileName: {
-        fontSize: height * 0.025,  // Responsive font size based on screen height
+        fontSize: height * 0.025,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#fff',
         marginTop: 10,
     },
+    nameContainer: {
+        marginBottom: height * 0.02,
+    },
     rank: {
-        fontSize: height * 0.02,  // Responsive font for the tag
+        fontSize: height * 0.018,
         color: '#fff',
         textAlign: 'center',
         marginTop: height * 0.005,
     },
     section: {
-        marginBottom: 30,
+        marginBottom: height * 0.025,  // Reduce bottom margin for more space
     },
     sectionTitle: {
         fontSize: 16,
@@ -205,18 +201,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: height * 0.01,  // Dynamic vertical padding for setting items
+        paddingVertical: height * 0.01,
     },
     settingText: {
-        fontSize: 16,
+        fontSize: 15,
         color: "#fff",
     },
     logoutButton: {
         backgroundColor: '#FF5A5F',
-        paddingVertical: height * 0.02,  // Dynamic padding for logout button
+        paddingVertical: height * 0.015,  // Reduce padding to make space for other content
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: height * 0.02,
+        marginTop: height * 0.04,
     },
     logoutText: {
         color: '#FFF',
@@ -230,21 +226,19 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         backgroundColor: '#23171E',
-        paddingBottom: 30,  // Fixed padding for the bottom
-        paddingTop: 10,  // Fixed top padding
-        borderTopWidth: 1,  // Add a thin border on top
-        borderTopColor: '#FFF',  // Set the border color to white
+        paddingBottom: 25,
+        paddingTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#FFF',
     },
     navButton: {
-        padding: 10,  // Fixed padding for the nav buttons
+        padding: 10,
     },
     navIcon: {
-        width: 30,  // Fixed width for nav icons
-        height: 30,  // Fixed height for nav icons
+        width: 30,
+        height: 30,
         resizeMode: 'contain',
     },
 });
-
-
 
 export default SettingsScreen;

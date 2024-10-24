@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions, Image } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -7,7 +7,23 @@ const LoadingScreen = () => {
     const bounceAnim = useRef(new Animated.Value(0)).current; // Animated value for bounce effect
     const fadeAnim = useRef(new Animated.Value(0)).current;   // Animated value for fade effect
 
+    const phrases = [
+        "Love With All Your Might",
+        "Stay Positive and Strong",
+        "Believe in Yourself",
+        "Chase For Your Love",
+        "Embrace the Journey",
+        "One Step at a Time",
+        "Don't overthink it, just do it"
+    ];
+
+    const [randomPhrase, setRandomPhrase] = useState('');
+
     useEffect(() => {
+        // Select a random phrase
+        const randomIndex = Math.floor(Math.random() * phrases.length);
+        setRandomPhrase(phrases[randomIndex]);
+
         // Bounce animation
         Animated.loop(
             Animated.sequence([
@@ -52,7 +68,7 @@ const LoadingScreen = () => {
                     { opacity: fadeAnim }, // Apply fade-in effect to the text
                 ]}
             >
-                Love With All Your Might
+                {randomPhrase}
             </Animated.Text>
         </View>
     );
