@@ -11,9 +11,10 @@ const LoadingScreen = () => {
         "Love With All Your Might",
         "Stay Positive and Strong",
         "Believe in Yourself",
-        "Chase Your For Your Love",
+        "Chase For Your Love",
         "Embrace the Journey",
-        "One Step at a Time"
+        "One Step at a Time",
+        "Don't overthink it, just do it"
     ];
 
     const [randomPhrase, setRandomPhrase] = useState('');
