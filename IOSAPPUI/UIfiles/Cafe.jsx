@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: height * -0.07, // Keep the character slightly above the bottom for responsiveness
         left: '50%',
-        marginLeft: -(width * 0.53), // Adjust to properly center the character
+        marginLeft: -(width * 0.54), // Adjust to properly center the character
         width: width * 1.05, // Allow the character to take more width of the screen
         height: height, // Increase the height to make the character larger
         zIndex: 1,
