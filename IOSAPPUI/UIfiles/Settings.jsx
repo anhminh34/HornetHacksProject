@@ -7,7 +7,6 @@ const { width, height } = Dimensions.get('window');  // Get screen dimensions fo
 
 const SettingsScreen = ({ navigation }) => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-    const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
     // Use context values for images
     const {
@@ -18,8 +17,6 @@ const SettingsScreen = ({ navigation }) => {
     } = useContext(ImageContext);  // Access ImageContext
 
     const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
-    const toggleDarkMode = () => setDarkModeEnabled(previousState => !previousState);
-
     // Function to pick banner image
     const pickBannerImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
