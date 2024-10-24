@@ -1,13 +1,15 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
 const LeaderboardScreen = ({ navigation }) => {
+    const [modalVisible, setModalVisible] = useState(false); // State for controlling overlay
+
     const leaderboardData = [
-        { rank: 1, name: 'MINH', score: 9001, profilePicture: require('../assets/icons/userIcon.png') },
-        { rank: 2, name: 'SEAN', score: 5000, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 1, name: 'MINH', score: 9001, profilePicture: require('../assets/images/minh.jpg') },
+        { rank: 2, name: 'SEAN', score: 5000, profilePicture: require('../assets/images/sean.jpg') },
         { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/icons/userIcon.png') },
         { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/icons/userIcon.png') },
         { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/fernProfile.jpg') },
@@ -24,6 +26,14 @@ const LeaderboardScreen = ({ navigation }) => {
             default:
                 return '#FFF';
         }
+    };
+
+    const handleOpenModal = () => {
+        setModalVisible(true); // Open the overlay
+    };
+
+    const handleCloseModal = () => {
+        setModalVisible(false); // Close the overlay
     };
 
     return (
@@ -61,6 +71,11 @@ const LeaderboardScreen = ({ navigation }) => {
                 </View>
             </LinearGradient>
 
+            {/* Info Button near the top right */}
+            <TouchableOpacity onPress={handleOpenModal} style={styles.infoButton}>
+                <Image source={require('../assets/icons/infoIcon.png')} style={styles.infoIcon} />
+            </TouchableOpacity>
+
             {/* Add space between Top 3 and Main Leaderboard */}
             <View style={styles.spacing} />
 
@@ -82,6 +97,23 @@ const LeaderboardScreen = ({ navigation }) => {
                     </View>
                 ))}
             </View>
+
+            {/* Modal for Overlay */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={handleCloseModal}
+            >
+                <View style={styles.overlayContainer}>
+                    <View style={styles.overlayContent}>
+                        <Text style={styles.overlayText}>This weekly leaderboard tracks how well you navigate social and romantic situations, helping you improve your interpersonal skills over time.</Text>
+                        <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
+                            <Text style={styles.closeButtonText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
             {/* Bottom Navigation Bar */}
             <View style={styles.navigationBar}>
@@ -168,8 +200,8 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     userIconFirstPlace: {
-        width: width * 0.4,  // Bigger size for first place
-        height: width * 0.24,
+        width: width * 0.28,  // Bigger size for first place
+        height: width * 0.28,
         borderRadius: width * 0.2,  // Circular profile picture
         resizeMode: 'cover',  // Zoom in to fit the container
     },
@@ -223,9 +255,9 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',  // Zoom in to fit the container
     },
     nameAndScoreContainer: {
-        flexDirection: 'row',  // Align name and score horizontally
+        flexDirection: 'row',
         flex: 1,
-        justifyContent: 'space-between',  // Ensure proper alignment of name and score
+        justifyContent: 'space-between',
     },
     playerNameSmall: {
         fontSize: height * 0.015,
@@ -262,6 +294,48 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         resizeMode: 'contain',
+    },
+    // Styles for the info button and modal
+    infoButton: {
+        position: 'absolute',
+        top: height * 0.08,  // Adjusted to make it slightly lower
+        right: width * 0.05,
+        zIndex: 10,
+    },
+    infoIcon: {
+        width: width * 0.08,  // Adjusted width for responsiveness
+        height: width * 0.08,  // Adjusted height for responsiveness
+        resizeMode: 'contain',
+    },
+    overlayContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',  // Semi-transparent background
+    },
+    overlayContent: {
+        width: '85%',  // Adjusted width for responsiveness
+        backgroundColor: '#FFF',
+        paddingVertical: height * 0.03,  // Responsive vertical padding
+        paddingHorizontal: width * 0.05,  // Responsive horizontal padding
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    overlayText: {
+        fontSize: height * 0.02,  // Responsive font size
+        color: '#333',
+        marginBottom: height * 0.03,  // Responsive margin
+    },
+    closeButton: {
+        backgroundColor: '#FF5A5F',
+        paddingVertical: height * 0.015,  // Responsive padding
+        paddingHorizontal: width * 0.1,   // Responsive padding
+        borderRadius: 5,
+    },
+    closeButtonText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: height * 0.02,  // Responsive font size
     },
 });
 
