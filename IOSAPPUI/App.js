@@ -5,6 +5,7 @@ import Home from './UIfiles/Home';  // Import the Home screen component
 import Cafe from './UIfiles/Cafe';  // Import the Cafe screen component
 import Settings from './UIfiles/Settings';  // Import the setting screen component
 import Leaderboard from './UIfiles/Leaderboards';
+import Heart from './UIfiles/Heart';
 import { ImageProvider } from './UIfiles/ImageContext';
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +43,14 @@ export default function App() {
                     <Stack.Screen
                         name="Settings"
                         component={Settings}
+                        options={{
+                            headerShown: false,
+                            animation: 'none' // Disable animation for Settings screen
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Heart"
+                        component={Heart}
                         options={{
                             headerShown: false,
                             animation: 'none' // Disable animation for Settings screen

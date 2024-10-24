@@ -3,25 +3,22 @@ import { View, Text, Switch, TouchableOpacity, StyleSheet, Image, Alert, Dimensi
 import * as ImagePicker from 'expo-image-picker';
 import { ImageContext } from './ImageContext';  // Import the context
 
-const { width, height } = Dimensions.get('window');  // Get screen dimensions for responsiveness
+const { width, height } = Dimensions.get('window');
 
 const SettingsScreen = ({ navigation }) => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-    // Use context values for images
     const {
         selectedBannerImage,
         setSelectedBannerImage,
         selectedProfileImage,
         setSelectedProfileImage
-    } = useContext(ImageContext);  // Access ImageContext
+    } = useContext(ImageContext);
 
-    const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
+    const toggleNotifications = () => setNotificationsEnabled(prev => !prev);
 
-    // Function to pick banner image
     const pickBannerImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
         if (!permissionResult.granted) {
             Alert.alert("Permission Required", "You need to grant permission to access your photo library.");
             return;
@@ -35,14 +32,12 @@ const SettingsScreen = ({ navigation }) => {
         });
 
         if (!result.canceled && result.assets && result.assets[0].uri) {
-            setSelectedBannerImage(result.assets[0].uri);  // Save the selected image in context
+            setSelectedBannerImage(result.assets[0].uri);
         }
     };
 
-    // Function to pick profile image
     const pickProfileImage = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
         if (!permissionResult.granted) {
             Alert.alert("Permission Required", "You need to grant permission to access your photo library.");
             return;
@@ -56,9 +51,12 @@ const SettingsScreen = ({ navigation }) => {
         });
 
         if (!result.canceled && result.assets && result.assets[0].uri) {
-            setSelectedProfileImage(result.assets[0].uri);  // Save the selected image in context
+            setSelectedProfileImage(result.assets[0].uri);
         }
     };
+
+    // Get the current active route
+    const currentRoute = navigation.getState().routes[navigation.getState().index].name;
 
     return (
         <View style={styles.container}>
@@ -69,10 +67,9 @@ const SettingsScreen = ({ navigation }) => {
                         source={selectedBannerImage ? { uri: selectedBannerImage } : require('../assets/images/defaultbanner.png')}
                         style={styles.bannerImage}
                     />
-                    {/* Profile Picture positioned at bottom-left of the banner */}
                     <TouchableOpacity onPress={pickProfileImage} style={styles.profilePictureWrapper}>
                         <Image
-                            source={selectedProfileImage ? { uri: selectedProfileImage } : { uri: 'https://i.pinimg.com/736x/4f/c8/57/4fc857f11d2a6d610b7a9cffb0d71655.jpg' }}
+                            source={selectedProfileImage ? { uri: selectedProfileImage } :  require('../assets/icons/userIcon.png')}
                             style={styles.profilePicture}
                         />
                     </TouchableOpacity>
@@ -110,27 +107,27 @@ const SettingsScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.logoutButton}>
                     <Text style={styles.logoutText} allowFontScaling={false}>Log Out</Text>
                 </TouchableOpacity>
-
             </View>
 
             {/* Bottom Navigation */}
             <View style={styles.navigationBar}>
                 <TouchableOpacity
-                    style={styles.navButton}
+                    style={[styles.navButton, currentRoute === 'Home' ? styles.activeNavButton : null]}
                     onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={styles.navButton}
+                    style={[styles.navButton, currentRoute === 'Leaderboard' ? styles.activeNavButton : null]}
                     onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Heart' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Heart')}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                {/* Settings Tab - Highlighted */}
                 <TouchableOpacity
-                    style={[styles.navButton, styles.activeNavButton]}  // Highlight the active tab
+                    style={[styles.navButton, currentRoute === 'Settings' ? styles.activeNavButton : null]}
                     onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
@@ -239,10 +236,9 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
-    // Active tab style
     activeNavButton: {
-        backgroundColor: '#ff7eb3',  // Highlight the active tab with a background color
-        borderRadius: 10,  // Optional: to add some roundness to the active tab
+        backgroundColor: '#ff7eb3',
+        borderRadius: 10,
     },
 });
 

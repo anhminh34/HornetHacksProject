@@ -5,12 +5,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 const { width, height } = Dimensions.get('window');
 
 const LeaderboardScreen = ({ navigation }) => {
-    const [modalVisible, setModalVisible] = useState(false); // State for controlling overlay
+    const [modalVisible, setModalVisible] = useState(false);
 
     const leaderboardData = [
         { rank: 1, name: 'MINH', score: 9001, profilePicture: require('../assets/images/minh.jpg') },
         { rank: 2, name: 'SEAN', score: 5000, profilePicture: require('../assets/images/sean.jpg') },
-        { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/images/Mathew.jpg') },
         { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/icons/userIcon.png') },
         { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/fernProfile.jpg') },
     ];
@@ -28,19 +28,17 @@ const LeaderboardScreen = ({ navigation }) => {
         }
     };
 
-    const handleOpenModal = () => {
-        setModalVisible(true); // Open the overlay
-    };
+    const handleOpenModal = () => setModalVisible(true);
+    const handleCloseModal = () => setModalVisible(false);
 
-    const handleCloseModal = () => {
-        setModalVisible(false); // Close the overlay
-    };
+    // Get the current active route
+    const currentRoute = navigation.getState().routes[navigation.getState().index].name;
 
     return (
         <View style={styles.container}>
             {/* Top 3 Display with Gradient Background */}
             <LinearGradient
-                colors={['#ff758c', '#ff7eb3']}  // Pinkish-purple gradient
+                colors={['#ff758c', '#ff7eb3']}
                 style={styles.topThreeContainer}
             >
                 <Text style={styles.title} allowFontScaling={false}>LEADERBOARD</Text>
@@ -71,15 +69,15 @@ const LeaderboardScreen = ({ navigation }) => {
                 </View>
             </LinearGradient>
 
-            {/* Info Button near the top right */}
+            {/* Info Button */}
             <TouchableOpacity onPress={handleOpenModal} style={styles.infoButton}>
                 <Image source={require('../assets/icons/infoIcon.png')} style={styles.infoIcon} />
             </TouchableOpacity>
 
-            {/* Add space between Top 3 and Main Leaderboard */}
+            {/* Spacing between sections */}
             <View style={styles.spacing} />
 
-            {/* Main Leaderboard List for ranks 1-5 (including 1, 2, 3 again) */}
+            {/* Main Leaderboard List */}
             <View style={styles.leaderboardList}>
                 {leaderboardData.map((player, index) => (
                     <View
@@ -117,16 +115,24 @@ const LeaderboardScreen = ({ navigation }) => {
 
             {/* Bottom Navigation Bar */}
             <View style={styles.navigationBar}>
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Home' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/icons/homeIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.navButton, styles.activeNavButton]}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Leaderboard' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Leaderboard')}>
                     <Image source={require('../assets/icons/leaderboardIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Heart' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Heart')}>
                     <Image source={require('../assets/icons/loveIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Settings')}>
+                <TouchableOpacity
+                    style={[styles.navButton, currentRoute === 'Settings' ? styles.activeNavButton : null]}
+                    onPress={() => navigation.navigate('Settings')}>
                     <Image source={require('../assets/icons/settingsIcon.png')} style={styles.navIcon} />
                 </TouchableOpacity>
             </View>
@@ -295,10 +301,9 @@ const styles = StyleSheet.create({
         height: 30,
         resizeMode: 'contain',
     },
-    // Active tab style
     activeNavButton: {
-        backgroundColor: '#ff7eb3',  // Highlight the active tab with a background color
-        borderRadius: 10,  // Optional: to add some roundness to the active tab
+        backgroundColor: '#ff7eb3',
+        borderRadius: 10,
     },
     infoButton: {
         position: 'absolute',
@@ -319,7 +324,7 @@ const styles = StyleSheet.create({
     },
     overlayContent: {
         width: '85%',
-        backgroundColor: '#FFF',
+        backgroundColor: 'rgb(255,255,255)',
         paddingVertical: height * 0.03,
         paddingHorizontal: width * 0.05,
         borderRadius: 10,
