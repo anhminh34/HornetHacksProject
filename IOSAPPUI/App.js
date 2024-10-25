@@ -8,7 +8,9 @@ import Leaderboard from './UIfiles/Leaderboards';
 import Heart from './UIfiles/Heart';
 import { ImageProvider } from './UIfiles/ImageContext';
 
+
 const Stack = createNativeStackNavigator();
+
 
 export default function App() {
     return (
