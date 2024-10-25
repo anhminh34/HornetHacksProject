@@ -11,9 +11,8 @@ CORS(app)
 def process_input():
     data = request.get_json() # Get the JSON from React front end
     userinput = data.get("inputValue")
-    print(userinput)
+    #print(userinput)
     response = pipe(userinput)
-
 
 
     result = f"{response}"
@@ -23,4 +22,5 @@ def process_input():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
+
