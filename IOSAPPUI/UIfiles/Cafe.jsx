@@ -42,9 +42,9 @@ const CafeScreen = ({ navigation }) => {
 
         try{
             console.log('Send button pressed')
-            const response =  await axios.post('http://192.168.0.129:5001/process-input',{inputValue: text}) //CHANGE IT WHENEVER
+            const response =  await axios.post('http://10.117.49.127:5001/process-input',{inputValue: text}) //CHANGE IT WHENEVER
             //const response = await axios.post('http://127.0.0.1:5001/process-input', {inputValue: text});
-            console.log('bruh')
+            console.log('Post processed')
 
             setOutput(response.data)
         } catch(error) {
