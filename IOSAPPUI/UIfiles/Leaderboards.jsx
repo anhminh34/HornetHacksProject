@@ -11,7 +11,7 @@ const LeaderboardScreen = ({ navigation }) => {
         { rank: 1, name: 'MINH', score: 9001, profilePicture: require('../assets/images/minh.jpg') },
         { rank: 2, name: 'SEAN', score: 5000, profilePicture: require('../assets/images/sean.jpg') },
         { rank: 3, name: 'MATHEW', score: 1234, profilePicture: require('../assets/images/Mathew.jpg') },
-        { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/icons/userIcon.png') },
+        { rank: 4, name: 'DANIEL', score: 999, profilePicture: require('../assets/images/daniel.jpg') },
         { rank: 5, name: 'EDISON', score: 1, profilePicture: require('../assets/images/edison.png') },
         { rank: 6, name: 'RandomUser1', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
         { rank: 7, name: 'RandomUser2', score: 1, profilePicture: require('../assets/icons/userIcon.png') },
@@ -117,7 +117,16 @@ const LeaderboardScreen = ({ navigation }) => {
                     <View style={styles.overlayContent}>
                         <Text style={styles.overlayText} allowFontScaling={false}>This weekly leaderboard tracks how well you navigate social and romantic situations, helping you improve your interpersonal skills over time.</Text>
                         <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
-                            <Text style={styles.closeButtonText} allowFontScaling={false}>Close</Text>
+                            <LinearGradient
+                                colors={['#ff758c', '#ff7eb3']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={styles.closeButtonGradient} // New style for the gradient container
+                            >
+                                <TouchableOpacity onPress={handleCloseModal} style={styles.closeButtonContent}>
+                                    <Text style={styles.closeButtonText} allowFontScaling={false}>Close</Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -342,17 +351,29 @@ const styles = StyleSheet.create({
         color: '#333',
         marginBottom: height * 0.03,
     },
-    closeButton: {
-        backgroundColor: '#FF5A5F',
+    closeButtonGradient: {
+        width: '100%',
         paddingVertical: height * 0.015,
         paddingHorizontal: width * 0.1,
-        borderRadius: 5,
+        borderRadius: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5,
+    },
+    closeButtonContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
     },
     closeButtonText: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: height * 0.02,
+      fontSize: height * 0.02,
+      fontWeight: 'bold',
+      color: "#fff",
     },
+
 });
 
 export default LeaderboardScreen;
