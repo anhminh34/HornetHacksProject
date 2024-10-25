@@ -1,12 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, Switch, TouchableOpacity, StyleSheet, Image, Alert, Dimensions } from 'react-native';
+import { View, Text, Switch, TouchableOpacity, StyleSheet, Image, Alert, Dimensions, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { ImageContext } from './ImageContext';  // Import the context
+import { ImageContext } from './ImageContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
 const SettingsScreen = ({ navigation }) => {
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+    const [showAboutUs, setShowAboutUs] = useState(false);
+    const [showManageAccount, setShowManageAccount] = useState(false);
+    const [profileName, setProfileName] = useState("Username");
+    const [newProfileName, setNewProfileName] = useState(profileName);
 
     const {
         selectedBannerImage,
@@ -55,8 +60,12 @@ const SettingsScreen = ({ navigation }) => {
         }
     };
 
-    // Get the current active route
     const currentRoute = navigation.getState().routes[navigation.getState().index].name;
+
+    const saveProfileUpdates = () => {
+        setProfileName(newProfileName);
+        setShowManageAccount(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -69,7 +78,7 @@ const SettingsScreen = ({ navigation }) => {
                     />
                     <TouchableOpacity onPress={pickProfileImage} style={styles.profilePictureWrapper}>
                         <Image
-                            source={selectedProfileImage ? { uri: selectedProfileImage } :  require('../assets/icons/userIcon.png')}
+                            source={selectedProfileImage ? { uri: selectedProfileImage } : require('../assets/icons/userIcon.png')}
                             style={styles.profilePicture}
                         />
                     </TouchableOpacity>
@@ -79,8 +88,8 @@ const SettingsScreen = ({ navigation }) => {
             {/* Settings UI */}
             <View style={styles.settingsContainer}>
                 <View style={styles.nameContainer}>
-                    <Text style={styles.profileName} allowFontScaling={false}>Username</Text>
-                    <Text style={styles.rank} allowFontScaling={false}>Clueless</Text>
+                    <Text style={styles.profileName} allowFontScaling={false}>{profileName}</Text>
+                    <Text style={styles.fixedNumber} allowFontScaling={false}>2380</Text>
                 </View>
 
                 <View style={styles.section}>
@@ -99,15 +108,66 @@ const SettingsScreen = ({ navigation }) => {
                     <TouchableOpacity style={styles.settingItem}>
                         <Text style={styles.settingText} allowFontScaling={false}>Change Password</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.settingItem}>
+                    <TouchableOpacity style={styles.settingItem} onPress={() => setShowManageAccount(true)}>
                         <Text style={styles.settingText} allowFontScaling={false}>Manage Account</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* About Us Button */}
+                <TouchableOpacity style={styles.settingItem} onPress={() => setShowAboutUs(true)}>
+                    <Text style={styles.settingText} allowFontScaling={false}>About Us</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity style={styles.logoutButton}>
                     <Text style={styles.logoutText} allowFontScaling={false}>Log Out</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Manage Account Overlay */}
+            {showManageAccount && (
+                <View style={styles.overlayContainer}>
+                    <Text style={styles.overlayTitle}>Change Username</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter new profile name"
+                        value={newProfileName}
+                        onChangeText={setNewProfileName}
+                    />
+                    <View style={styles.overlayButtons}>
+                        <TouchableOpacity onPress={() => setShowManageAccount(false)} style={styles.cancelButton}>
+                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <LinearGradient
+                            colors={['#ff758c', '#ff7eb3']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 1 }}
+                            style={styles.gradientButton}
+                        >
+                            <TouchableOpacity onPress={saveProfileUpdates} style={styles.saveButtonContent}>
+                                <Text style={styles.saveButtonText}>Save</Text>
+                            </TouchableOpacity>
+                        </LinearGradient>
+                    </View>
+                </View>
+            )}
+
+            {/* About Us Overlay */}
+            {showAboutUs && (
+                <View style={styles.overlayContainer}>
+                    <TouchableOpacity
+                        style={styles.closeIconContainer}
+                        onPress={() => setShowAboutUs(false)}>
+                        <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
+                    </TouchableOpacity>
+                    <Text style={styles.aboutTitle}>About Us - C0DE2AH</Text>
+                    <Text style={styles.aboutDescription}>Edison Ho - UI Connoisseur (3 AM Pusher)</Text>
+                    <Text style={styles.aboutDescription}>Sean Bombay - AI Handler (Loves Persephone)</Text>
+                    <Text style={styles.aboutDescription}>Minh Nguyen - The Everything Bagel</Text>
+                    <Text style={styles.aboutDescription}>Mathew Anselmi - Transformer (Optimus Prime) Researcher</Text>
+                    <Text style={styles.aboutDescription}>Daniel Ming - Backend Struggler</Text>
+                    <Image source={require('../assets/images/group.jpg')} style={styles.aboutImage} />
+                </View>
+            )}
 
             {/* Bottom Navigation */}
             <View style={styles.navigationBar}>
@@ -168,22 +228,21 @@ const styles = StyleSheet.create({
         borderColor: '#23171E',
     },
     settingsContainer: {
-        marginTop: height * 0.1,
+        marginTop: height * 0.07, // Adjusted to bring Username and fixed number higher
         paddingHorizontal: '5%',
+    },
+    nameContainer: {
+        marginBottom: height * 0.02,
+        alignItems: 'center',
     },
     profileName: {
         fontSize: height * 0.025,
         fontWeight: 'bold',
-        textAlign: 'center',
         color: '#fff',
     },
-    nameContainer: {
-        marginBottom: height * 0.02,
-    },
-    rank: {
+    fixedNumber: {
         fontSize: height * 0.02,
-        color: '#fff',
-        textAlign: 'center',
+        color: '#FFD700',
     },
     section: {
         marginBottom: height * 0.03,
@@ -239,6 +298,101 @@ const styles = StyleSheet.create({
     activeNavButton: {
         backgroundColor: '#ff7eb3',
         borderRadius: 10,
+    },
+
+    // Overlay styles
+    overlayContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    closeIconContainer: {
+        position: 'absolute',
+        top: height * 0.08,
+        right: width * 0.08,
+    },
+    closeIcon: {
+        width: height * 0.035,
+        height: height * 0.035,
+        resizeMode: 'contain',
+    },
+    overlayTitle: {
+        fontSize: height * 0.03,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginBottom: height * 0.02,
+    },
+    input: {
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        padding: height * 0.02,
+        width: '80%',
+        borderRadius: 10,
+        fontSize: height * 0.02,
+        marginBottom: height * 0.02,
+    },
+    overlayButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+    },
+    cancelButton: {
+        borderColor: '#FF5A5F',
+        borderWidth: 2,
+        paddingVertical: height * 0.015,
+        borderRadius: 10,
+        flex: 1,
+        alignItems: 'center',
+        marginHorizontal: 5,
+        backgroundColor: 'transparent',
+    },
+    cancelButtonText: {
+        color: '#FF5A5F',
+        fontWeight: 'bold',
+        fontSize: height * 0.02,
+    },
+
+    // Gradient and Save Button
+    gradientButton: {
+        flex: 1,
+        borderRadius: 10,
+        marginHorizontal: 5,
+    },
+    saveButtonContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: height * 0.015,
+    },
+    saveButtonText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: height * 0.02,
+    },
+
+    // About Us styles
+    aboutTitle: {
+        fontSize: height * 0.03,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginBottom: height * 0.02,
+    },
+    aboutDescription: {
+        fontSize: height * 0.02,
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: height * 0.03,
+    },
+    aboutImage: {
+        width: width * 0.6,
+        height: width * 0.4,
+        resizeMode: 'contain',
+        marginBottom: height * 0.03,
     },
 });
 

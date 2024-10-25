@@ -322,13 +322,13 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: height * 0.01,   // Adjusts the top margin based on screen height
+        right: width * 0.02,  // Adjusts the right margin based on screen width
         zIndex: 10,
     },
     closeIcon: {
-        width: 30,
-        height: 30,
+        width: height * 0.035,  // Adjusts icon size based on screen height
+        height: height * 0.035, // Ensures the icon is square
         resizeMode: 'contain',
     },
 });

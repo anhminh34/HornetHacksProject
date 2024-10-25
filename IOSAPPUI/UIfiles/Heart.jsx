@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
-
-// Scale factor based on the height of the iPhone 14 Pro Max (height: 932)
-const scaleFactor = height / 932;
 
 const ScoreGraphScreen = ({ navigation }) => {
     const currentRoute = navigation.getState().routes[navigation.getState().index].name;
@@ -34,7 +32,6 @@ const ScoreGraphScreen = ({ navigation }) => {
         { title: 'INTP', percentage: '30%' }
     ];
 
-    // Colors from greatest to least in shades of pink/red
     const listColors = [
         '#ff7eb3', '#ff92c1', '#ffa5cf', '#ffb8dd', '#ffcced',
         '#ffdfe8', '#ffedf3', '#fff4f7', '#ffe8e9', '#ffdadb',
@@ -42,9 +39,26 @@ const ScoreGraphScreen = ({ navigation }) => {
         '#ff6e87'
     ];
 
+    const renderCloseButton = (onPress) => (
+        <TouchableOpacity
+            onPress={onPress}
+            style={styles.closeButtonContainer}
+            activeOpacity={0.7}
+        >
+            <LinearGradient
+                colors={['#ff758c', '#ff7eb3']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.closeButton}
+            >
+                <Text style={styles.closeButtonText}>X</Text>
+            </LinearGradient>
+        </TouchableOpacity>
+    );
+
     return (
         <View style={styles.container}>
-            {/* Image buttons to open List or Graph or Proficiency */}
+            {/* Image buttons to open List, Graph, or Proficiency */}
             {!showGraph && !showList && !showProficiency && (
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.imageContainer} onPress={() => setShowList(true)}>
@@ -61,14 +75,12 @@ const ScoreGraphScreen = ({ navigation }) => {
                 </View>
             )}
 
-            {/* Graph Display */}
+            {/* Full-Screen Graph Overlay */}
             {showGraph && (
-                <View style={styles.graphContainer}>
+                <View style={styles.fullScreenOverlay}>
+                    {renderCloseButton(() => setShowGraph(false))}
                     <Text style={styles.graphTitle} allowFontScaling={false}>Weekly Game Scores</Text>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    >
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.graphContent}>
                         <LineChart
                             data={{
                                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -78,8 +90,8 @@ const ScoreGraphScreen = ({ navigation }) => {
                                     }
                                 ]
                             }}
-                            width={width * 1.2} // Adjusted width to remove extra space after Sunday
-                            height={height * 0.35} // Made the graph slightly smaller
+                            width={width * 1.2}
+                            height={height * 0.35}
                             chartConfig={{
                                 backgroundColor: '#23171E',
                                 backgroundGradientFrom: '#ff7eb3',
@@ -91,26 +103,14 @@ const ScoreGraphScreen = ({ navigation }) => {
                             style={styles.chartStyle}
                         />
                     </ScrollView>
-                    {/* X Icon Button for closing the graph */}
-                    <TouchableOpacity style={styles.graphCloseIconContainer} onPress={() => setShowGraph(false)}>
-                        <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
-                    </TouchableOpacity>
                 </View>
             )}
 
             {/* Scrollable List Display */}
             {showList && (
                 <View style={styles.listContainer}>
-                    {/* Title and Close Icon */}
                     <Text style={styles.listTitle} allowFontScaling={false}>Compatibility</Text>
-                    <TouchableOpacity style={styles.listCloseIconContainer} onPress={() => setShowList(false)}>
-                        <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
-                    </TouchableOpacity>
-
-                    <ScrollView
-                        contentContainerStyle={styles.scrollViewContainer}
-                        showsVerticalScrollIndicator={false}
-                    >
+                    <ScrollView contentContainerStyle={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
                         {listData.map((item, index) => (
                             <View key={index} style={[styles.listItem, { backgroundColor: listColors[index] }]}>
                                 <Text style={styles.listItemText} allowFontScaling={false}>{item.title}</Text>
@@ -118,30 +118,39 @@ const ScoreGraphScreen = ({ navigation }) => {
                             </View>
                         ))}
                     </ScrollView>
+                    {renderCloseButton(() => setShowList(false))}
                 </View>
             )}
 
             {/* Proficiency Overlay */}
             {showProficiency && (
-                <View style={styles.proficiencyContainer}>
-                    <TouchableOpacity style={styles.listCloseIconContainer} onPress={() => setShowProficiency(false)}>
-                        <Image source={require('../assets/icons/xIcon.png')} style={styles.closeIcon} />
-                    </TouchableOpacity>
+                <View style={styles.overlayContainer}>
+                    <Text style={styles.proficiencyTitle} allowFontScaling={false}>Proficiency</Text>
                     <View style={styles.proficiencyTopHalf}>
                         <Image source={require('../assets/images/Persephone.png')} style={styles.proficiencyImage} />
                         <View style={styles.transparentTextBox}>
+                            <Text style={styles.nameText} allowFontScaling={false}>
+                                Persephone:
+                            </Text>
                             <Text style={styles.proficiencyText} allowFontScaling={false}>
-                                This is the top half text for proficiency.
+                                I really enjoyed our cafe date!
+                                I really enjoyed how you talked about your favorite coffees.
                             </Text>
                         </View>
                     </View>
                     <View style={styles.proficiencyBottomHalf}>
                         <View style={styles.largerTransparentTextBox}>
                             <Text style={styles.proficiencyText} allowFontScaling={false}>
-                                This is the bottom half text for proficiency.
+                                <Text style={styles.proficiencyTextBold}>Listener Quality: </Text>
+                                INFPs, like Persephone, are natural listeners and appreciate when someone is genuinely present with them.
+                            </Text>
+                            <Text style={styles.proficiencyText} allowFontScaling={false}>
+                                <Text style={styles.proficiencyTextBold}>Conversation Depth: </Text>
+                                INFPs are drawn to meaningful discussions—anything from life goals to passions or unique insights.
                             </Text>
                         </View>
                     </View>
+                    {renderCloseButton(() => setShowProficiency(false))}
                 </View>
             )}
 
@@ -182,146 +191,188 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: width * 0.05,
     },
     imageContainer: {
-        marginBottom: 30 * scaleFactor, // Add spacing between buttons
+        marginBottom: height * 0.03,
         justifyContent: 'center',
         alignItems: 'center',
     },
     centerImage: {
-        width: 100 * scaleFactor,
-        height: 100 * scaleFactor,
+        width: width * 0.23,
+        height: width * 0.23,
         resizeMode: 'contain',
     },
-    graphContainer: {
-        marginTop: height * 0.1,
+    fullScreenOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        justifyContent: 'center',
         alignItems: 'center',
+    },
+    graphContent: {
+        alignItems: 'center',
+        paddingTop: height * 0.2,
     },
     graphTitle: {
         fontSize: height * 0.03,
         color: '#FFFFFF',
         fontWeight: 'bold',
-        marginBottom: 20 * scaleFactor,
+        position: 'absolute',
+        top: height * 0.35,
     },
     chartStyle: {
-        borderRadius: 10 * scaleFactor,
+        borderRadius: 10,
+    },
+    closeButtonContainer: {
+        position: 'absolute',
+        top: height * 0.08, // Adjusted to keep it clickable
+        right: width * 0.05,
+        zIndex: 100, // Ensures the button is always on top
+    },
+    closeButton: {
+        borderRadius: 20,
+        width: width * 0.15,
+        height: height * 0.04,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    closeButtonText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: height * 0.02,
     },
     listContainer: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 70 * scaleFactor, // Increased padding to lower the title and button
+        paddingTop: height * 0.1,
     },
     listTitle: {
-        fontSize: 24 * scaleFactor,
+        fontSize: 24,
         color: '#FFF',
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20 * scaleFactor,
+        marginBottom: height * 0.02,
     },
     scrollViewContainer: {
-        paddingBottom: 100 * scaleFactor, // Ensure the last item is not covered
+        paddingBottom: height * 0.1,
     },
     listItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: width * 0.9,
-        padding: 15 * scaleFactor,
-        marginBottom: 10 * scaleFactor,
-        borderRadius: 5 * scaleFactor,
+        padding: width * 0.04,
+        marginBottom: height * 0.01,
+        borderRadius: 5,
     },
     listItemText: {
-        fontSize: 18 * scaleFactor,
+        fontSize: height * 0.02,
         color: '#23171E',
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     listItemPercentage: {
-        fontSize: 18 * scaleFactor,
-        color: '#23171E', // Changed to dark text for better visibility
-        fontWeight: "bold",
+        fontSize: height * 0.02,
+        color: '#23171E',
+        fontWeight: 'bold',
     },
-    proficiencyContainer: {
-        flex: 1,
-        padding: 20 * scaleFactor,
+    overlayContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+    },
+    proficiencyTitle: {
+        position: 'absolute',
+        top: height * 0.13, // Adjust this value to control how high the title sits
+        fontSize: height * 0.03,
+        color: '#FFF',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        width: '100%', // Ensures it stays centered
     },
     proficiencyTopHalf: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 30 * scaleFactor,
-    },
-    proficiencyBottomHalf: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    proficiencyImage: {
-        width: width * 0.3, // Adjusted image size to fit better
-        height: width * 0.3,
-        resizeMode: 'contain',
-        marginTop: 50 * scaleFactor, // Lowered the Persephone image
-    },
-    transparentTextBox: {
-        flex: 1,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent box
-        padding: 10 * scaleFactor,
-        marginLeft: 10 * scaleFactor,
-        borderRadius: 10 * scaleFactor,
-        borderColor: '#FFF', // Added white border
-        borderWidth: 2 * scaleFactor,
-        justifyContent: 'center',
-    },
-    largerTransparentTextBox: {
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        padding: 15 * scaleFactor, // Increased padding for the bottom text box
-        borderRadius: 10 * scaleFactor,
-        borderColor: '#FFF',
-        borderWidth: 2 * scaleFactor,
         justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: height * 0.03,
+    },
+    proficiencyImage: {
+        width: width * 0.45,
+        height: width * 0.45,
+        resizeMode: 'contain',
+        marginRight: width * -0.03,
+    },
+    transparentTextBox: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        padding: height * 0.02,
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 2,
+        justifyContent: 'center',
+        flex: 1,
+        minHeight: height * 0.2,
+    },
+    largerTransparentTextBox: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        padding: height * 0.02,
+        borderRadius: 10,
+        borderColor: '#FFF',
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: height * 0.03,
+        width: width * 0.9,
+        minHeight: height * 0.3,
+    },
+    nameText: {
+        color: '#ff7eb3',
+        fontSize: height * 0.025,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: height * 0.02,
     },
     proficiencyText: {
-        color: '#FFF', // Text is white for better contrast
-        fontSize: 14 * scaleFactor, // Adjusted font size for better fit
+        color: '#FFF',
+        fontSize: height * 0.018,
+        textAlign: 'center',
+        lineHeight: height * 0.03,
+        paddingHorizontal: width * 0.03,
+    },
+    proficiencyTextBold: {
         fontWeight: 'bold',
-    },
-    graphCloseIconContainer: {
-        position: 'absolute',
-        top: 4 * scaleFactor, // Aligned to the top of the graph
-        right: 10 * scaleFactor,
-    },
-    listCloseIconContainer: {
-        position: 'absolute',
-        top: 70 * scaleFactor, // Aligned to match the title for compatibility
-        right: 10 * scaleFactor,
-    },
-    closeIcon: {
-        width: 30 * scaleFactor,
-        height: 30 * scaleFactor,
+        color: '#FFF',
     },
     navigationBar: {
         flexDirection: 'row',
+        justifyContent: 'space-around',
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        justifyContent: 'space-around',
         backgroundColor: '#23171E',
-        paddingBottom: 30 * scaleFactor,
-        paddingTop: 10 * scaleFactor,
-        borderTopWidth: 1 * scaleFactor,
+        paddingBottom: 30,
+        paddingTop: 10,
+        borderTopWidth: 1,
         borderTopColor: '#FFF',
     },
     navButton: {
-        padding: 10 * scaleFactor,
+        padding: 10,
     },
     navIcon: {
-        width: 30 * scaleFactor,
-        height: 30 * scaleFactor,
+        width: 30,
+        height: 30,
         resizeMode: 'contain',
     },
     activeNavButton: {
         backgroundColor: '#ff7eb3',
-        borderRadius: 10 * scaleFactor,
+        borderRadius: 10,
     },
 });
 
