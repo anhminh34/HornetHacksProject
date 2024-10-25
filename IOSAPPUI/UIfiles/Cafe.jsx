@@ -8,6 +8,9 @@ const CafeScreen = ({ navigation }) => {
     const [text, setText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const slideAnim = useRef(new Animated.Value(height)).current;
+    const [output, setOutput] = useState('');
+    var response;
+
 
     const showModal = () => {
         setModalVisible(true);
@@ -27,18 +30,28 @@ const CafeScreen = ({ navigation }) => {
             useNativeDriver: true,
         }).start(() => setModalVisible(false));
     };
-    
+
     // function to send data back to python backend with axios
     const sendDataToBack = async () => {
+        /*
+        fetch('http://127.0.0.1:5000/process-input')
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.log(error));
+    }*/
+
         try{
             console.log('Send button pressed')
-            const response = await axios.post('http://127.0.0.1:5000/process-input', {inputValue: text});
-            console.log(response.data)
-            setResponseMessage(response.data);
+            const response =  await axios.post('http://192.168.0.129:5001/process-input',{inputValue: text}) //CHANGE IT WHENEVER
+            //const response = await axios.post('http://127.0.0.1:5001/process-input', {inputValue: text});
+            console.log('bruh')
+
+            setOutput(response.data)
         } catch(error) {
-            console.error(error);
+            console.error("Sending back error", error);
         }
     };
+
 
     return (
         <KeyboardAvoidingView
@@ -68,8 +81,8 @@ const CafeScreen = ({ navigation }) => {
                     </TouchableOpacity>
 
                     {/* Text Box */}
-                    <View style={styles.bottomBox}>
-                        <Text style={styles.boxText} allowFontScaling={false}>Hey. What type of Coffee do you like?</Text>
+                    <View style={styles.bottomBox} id="responseID">
+                        <Text style={styles.boxText} placeholder="What type of coffee do you like?" allowFontScaling={false}>{output} </Text>
                     </View>
 
                     {/* Input Field */}
