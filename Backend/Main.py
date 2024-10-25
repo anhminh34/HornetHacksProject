@@ -13,10 +13,11 @@ def process_input():
     userinput = data.get("inputValue")
     print(userinput)
     response = pipe(userinput)
-    testinput = "What type of coffee do you like?"
-    testresponse = pipe(testinput)
 
-    result = f"Processed input: {testresponse}"
+
+
+    result = f"{response}"
+    result = result[22:-3]
     return jsonify(result)
 
 
